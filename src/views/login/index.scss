@@ -1,0 +1,26 @@
+.from-wrap {
+    display: flex;
+    width: 300px;
+    height: 100vh;
+    margin: auto;
+    // background-color: #fff;
+    align-items: center;
+    >div { width: 100%; }
+}
+.from-header {
+    height: 56px;
+    line-height: 56px;
+    color: #fff;
+    .column {
+        margin-bottom: 0 !important;
+        float: left;
+        font-size: 16px;
+        color: #fff;
+    }
+    span{
+        float: right;
+        font-size: 12px;
+        opacity: .3;
+        cursor: pointer;
+    }
+}
