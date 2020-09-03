@@ -4,10 +4,15 @@ import "./index.scss";
 //antd
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, UnlockOutlined } from '@ant-design/icons';
+//组件
+import Code from "../../components/code/index";
+
 class RegisterForm extends Component{
     constructor(){
         super();
-        this.state = {};    
+        this.state = {
+            username:""
+        };    
     };
 
     onFinish = (values) => {
@@ -18,6 +23,7 @@ class RegisterForm extends Component{
     }
 
     render(){
+        const { username } = this.state;
         return (
             <Fragment>
                 <div className="from-header">
@@ -49,7 +55,7 @@ class RegisterForm extends Component{
                                 <Input prefix={<UnlockOutlined className="site-form-item-icon" />} placeholder="Code" />
                             </Col>
                             <Col span={9}>
-                                <Button type="primary" block danger>获取验证码</Button>
+                                <Code username={username} />
                             </Col>
                         </Row>
                     </Form.Item>

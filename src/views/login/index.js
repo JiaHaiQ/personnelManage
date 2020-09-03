@@ -7,7 +7,7 @@ class Login extends Component{
     constructor(){
         super();
         this.state = {
-            formType:"login",
+            formType: "login",
         };    
     };
 
