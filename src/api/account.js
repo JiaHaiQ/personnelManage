@@ -9,6 +9,15 @@ export function Login(data){
     })
 }
 
+/**注册 */
+export function Register(data){
+    return service.request({
+        url: "/register/",
+        method: "post",
+        data
+    })
+}
+
 /**获取验证码 */
 export function GetCode(data){
     // console.log(JSON.stringify(data))

@@ -16,10 +16,12 @@ class Code extends Component{
             btn_text: "获取验证码",
             btn_loading: false,
             btn_disabled: false,
+            module: props.module
         };    
     };
     //监听接收父组件的传值
-    componentWillReceiveProps({username}){
+    componentWillReceiveProps({ username }){
+        // console.log(username)
         this.setState({
             username
         })
@@ -48,10 +50,10 @@ class Code extends Component{
         })
         const requestData = {
             username,
-            module:"login"
+            module:this.state.module
         }
         GetCode(requestData).then(res =>{
-            message.success("验证码已发送");
+            message.success("验证码已发送!");
             console.log(res);
             this.countDown();
         }).catch(error => {
