@@ -1,4 +1,5 @@
 import React,{ Component, Fragment } from "react";
+import { withRouter } from "react-router-dom";
 import "./index.scss";
 // antd
 import { Form, Input, Button, Row, Col, message } from 'antd';
@@ -27,13 +28,13 @@ class LoginForm extends Component{
         this.props.switchFrom("register");
     }
     // 登录
-    onLogin = (values) => {
+    onLogin = () => {
         const loginData = {
             username: this.state.username,
             password: CryptoJs.MD5(this.state.password).toString(),
             code: this.state.code,
         }
-        console.log('登录参数', loginData);
+        // console.log('登录参数', loginData);
         this.setState({
             loginLoading:true
         })
@@ -44,12 +45,11 @@ class LoginForm extends Component{
             })
             // console.log(res)
             if ( res.data.resCode === 0 ) {
-                message.success(res.data.message);
-            } else if ( res.data.resCode === 1004 ) {
+                message.success(res.data.message,2);
+                this.props.history.push("/index");
+            } else {
                 message.error(res.data.message);
             }
-        }).catch(error => {
-            // console.log(error)
         })
     };
     // 输入change
@@ -148,4 +148,4 @@ class LoginForm extends Component{
     }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);
