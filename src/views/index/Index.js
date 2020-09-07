@@ -3,6 +3,8 @@ import "./layout.scss"
 // 组件
 import LayoutAside from "./components/aside";
 import LayoutHeader from "./components/header";
+import ContainerMain from "../../components/containerMain/index";
+
 
 
 // antd
@@ -22,7 +24,9 @@ class Index extends Component {
                     <Sider width="250px">
                         <LayoutAside />
                     </Sider>
-                    <Content className="layout_content">内容</Content>
+                    <Content className="layout_content">
+                        <ContainerMain />
+                    </Content>
                 </Layout>
             </Layout>
         )
