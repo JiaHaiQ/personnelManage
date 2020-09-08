@@ -1,5 +1,5 @@
 import React,{ Component, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Menu } from "antd";
 import { UserOutlined } from '@ant-design/icons';
 import Router from '../../router/index';
@@ -8,9 +8,42 @@ const { SubMenu } = Menu;
 class asideMenu extends Component {
     constructor(props){
         super(props);
-        this.status = {};
+        this.state = {
+            selectedKeys: [],
+            openKeys: []
+        };
+    }
+    componentDidMount(){
+        const pathname = this.props.location.pathname;
+        const menuKey = pathname.split("/").slice(0, 3).join("/");
+        const menuHigh = {
+            selectedKeys: pathname,
+            openKeys: menuKey
+        }
+        this.selectMenuHigh(menuHigh);
     }
 
+    // 选择菜单
+    selectMenu = ({ key, keyPath }) => {
+        const menuHigh = {
+            selectedKeys: key,
+            openKeys: keyPath[keyPath.length-1]
+        }
+        this.selectMenuHigh(menuHigh);
+    }
+    // 菜单高光
+    selectMenuHigh = ({selectedKeys, openKeys}) => {
+        this.setState({
+            selectedKeys: [selectedKeys],
+            openKeys: [openKeys]
+        })
+    }
+    openMenu = (openKeys) => {
+        // console.log(openKeys)
+        this.setState({
+            openKeys: [openKeys[openKeys.length-1]]
+        })
+    }
     // 菜单
     renderMenu = ({key, title}) => {
         return (
@@ -32,13 +65,16 @@ class asideMenu extends Component {
     }
 
     render(){
+        const { selectedKeys, openKeys } = this.state;
         return (
             <Fragment>
                 <Menu
+                onOpenChange={this.openMenu}
+                onClick={this.selectMenu}
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
+                selectedKeys={selectedKeys}
+                openKeys={openKeys}
                 style={{ height: '100%', borderRight: 0 }}
                 >
                     {
@@ -53,4 +89,4 @@ class asideMenu extends Component {
     } 
 }
 
-export default asideMenu;
+export default withRouter(asideMenu);
