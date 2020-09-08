@@ -1,7 +1,7 @@
 import React,{ Component } from "react";
 import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 import "./hender.scss";
-class header extends Component {
+class layoutHeader extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -35,4 +35,4 @@ class header extends Component {
     } 
 }
 
-export default header;
+export default layoutHeader;

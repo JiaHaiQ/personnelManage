@@ -8,7 +8,7 @@ import { validata_pass } from '../../utils/validata';
 // api
 import { Register } from "../../api/account";
 // 组件
-import Code from "../../components/code/index";
+import Code from "../../components/code/Index";
 // 加密
 import CryptoJs from "crypto-js";
 class RegisterForm extends Component{

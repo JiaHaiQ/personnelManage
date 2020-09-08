@@ -9,7 +9,7 @@ import { validata_password } from '../../utils/validata';
 // api
 import { Login } from "../../api/account";
 //组件
-import Code from "../../components/code/index";
+import Code from "../../components/code/Index";
 // 加密
 import CryptoJs from "crypto-js";
 // 方法

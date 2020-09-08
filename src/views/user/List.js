@@ -1,7 +1,6 @@
-import React from 'react';
-// import {Switch, Route, BrowserRouter} from 'react-router-dom';
+import React,{Component} from 'react';
 
-class User extends React.Component{
+class UserList extends Component{
   constructor(props){
     super(props);
     this.state = {};
@@ -15,4 +14,4 @@ class User extends React.Component{
   }
 }
 
-export default User;
+export default UserList;

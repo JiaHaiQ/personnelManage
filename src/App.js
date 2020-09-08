@@ -1,11 +1,11 @@
-import React from 'react';
+import React,{Component} from 'react';
 import {Switch, Route, BrowserRouter} from 'react-router-dom';
 //引组件
-import Login from './views/login/index';
+import Login from './views/login/Index';
 import Index from './views/index/Index';
-import PrivateRouter from './components/privateRouter/index';
+import PrivateRouter from './components/privateRouter/Index';
 
-class App extends React.Component{
+class App extends Component{
   constructor(props){
     super(props);
     this.state = {};

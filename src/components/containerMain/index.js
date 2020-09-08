@@ -1,11 +1,11 @@
-import React from 'react';
+import React,{Component} from 'react';
 import {Switch} from 'react-router-dom';
+// 私有路由
+import PrivateRouter from '../privateRouter/Index';
+// 自动化
+import Components from '../containerMain/components'
 
-import User from '../../views/user/index';
-import AddUser from '../../views/user/AddUser';
-import PrivateRouter from '../privateRouter/index';
-
-class ContainerMain extends React.Component{
+class ContainerMain extends Component{
   constructor(props){
     super(props);
     this.state = {};
@@ -13,8 +13,11 @@ class ContainerMain extends React.Component{
   render(){
     return(
         <Switch>
-            <PrivateRouter exact path="/index/user/list" component={ User } />
-            <PrivateRouter exact path="/index/user/add" component={ AddUser } />
+          {
+            Components.map(itme => {
+              return <PrivateRouter exact key={itme.path} path={itme.path} component={itme.component} />
+            })
+          }
         </Switch>
     )
   }

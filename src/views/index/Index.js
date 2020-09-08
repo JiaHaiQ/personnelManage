@@ -1,9 +1,9 @@
 import React,{ Component } from "react";
 import "./layout.scss"
 // 组件
-import LayoutAside from "./components/aside";
-import LayoutHeader from "./components/header";
-import ContainerMain from "../../components/containerMain/index";
+import LayoutAside from "./components/Aside";
+import LayoutHeader from "./components/Header";
+import ContainerMain from "../../components/containerMain/Index";
 // antd
 import { Layout } from 'antd';
 const { Sider, Header, Content} = Layout;
