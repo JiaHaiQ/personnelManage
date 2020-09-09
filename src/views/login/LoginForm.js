@@ -13,7 +13,7 @@ import Code from "../../components/code/Index";
 // 加密
 import CryptoJs from "crypto-js";
 // 方法
-import { setToken } from "../../utils/session";
+import { setToken,setUsername } from "../../utils/cookies";
 class LoginForm extends Component{
     constructor(){
         super();
@@ -46,17 +46,16 @@ class LoginForm extends Component{
                 loginLoading:false
             })
             // console.log(res)
-            const data = res.data.data
+            const data = res.data.data;
+            // 存数据
             setToken(data.token);
-            if ( res.data.resCode === 0 ) {
-                message.success(res.data.message,2);
-                this.props.history.push("/index");
-            } else {
-                message.error(res.data.message);
-                this.setState({
-                    loginLoading:false
-                })
-            }
+            setUsername(data.username);
+            message.success(res.data.message);
+            this.props.history.push("/index");
+        }).catch(error => {
+            this.setState({
+                loginLoading:false
+            })
         })
     };
     // 输入change

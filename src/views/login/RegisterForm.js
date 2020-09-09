@@ -34,11 +34,8 @@ class RegisterForm extends Component{
         }
         // console.log('注册参数', registerData);
         Register(registerData).then(res =>{
-            console.log(res)
-            if ( res.data.resCode === 0 ){
-                message.success(res.data.message)
-                this.toggleForm();
-            }
+            message.success(res.data.message)
+            this.toggleForm();
         })
     };
     // 输入change

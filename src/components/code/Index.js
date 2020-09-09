@@ -53,8 +53,8 @@ class Code extends Component{
             module:this.state.module
         }
         GetCode(requestData).then(res =>{
-            message.success("验证码已发送!");
-            console.log(res);
+            message.success(res.data.message);
+            // console.log(res);
             this.countDown();
         }).catch(error => {
             this.setState({
