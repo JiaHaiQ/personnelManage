@@ -2,7 +2,7 @@ import React,{Component, Fragment} from 'react';
 // antd
 import { Form, Input, Button, Table, Switch, message } from 'antd';
 // api
-import { getDepartmentList, deleteDepartment } from "../../api/department";
+import { getDepartmentList, deleteDepartment } from "@api/department";
 class DepartmentList extends Component{
   constructor(props){
     super(props);

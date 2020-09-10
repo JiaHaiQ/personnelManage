@@ -1,4 +1,4 @@
-import service from "../../src/utils/request";
+import service from "@/utils/request";
 
 /**登录 */
 export function Login(data){

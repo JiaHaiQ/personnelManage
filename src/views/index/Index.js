@@ -3,7 +3,7 @@ import "./layout.scss"
 // 组件
 import LayoutAside from "./components/Aside";
 import LayoutHeader from "./components/Header";
-import ContainerMain from "../../components/containerMain/Index";
+import ContainerMain from "@c/containerMain/Index";
 // antd
 import { Layout } from 'antd';
 const { Sider, Header, Content} = Layout;

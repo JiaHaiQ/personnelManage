@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 // antd
 import { Form, Input, Button, InputNumber, Radio, message } from 'antd';
 // api
-import { DepartmentAddApi } from "../../api/department";
+import { DepartmentAddApi } from "@api/department";
 class DepartmentAdd extends Component{
   constructor(props){
     super(props);

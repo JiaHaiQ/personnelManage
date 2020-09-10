@@ -5,15 +5,15 @@ import "./index.scss";
 import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined, UnlockOutlined } from '@ant-design/icons';
 // 验证
-import { validata_password } from '../../utils/validata';
+import { validata_password } from '@utils/validata';
 // api
-import { Login } from "../../api/account";
+import { Login } from "@api/account";
 //组件
-import Code from "../../components/code/Index";
+import Code from "@c/code/Index";
 // 加密
 import CryptoJs from "crypto-js";
 // 方法
-import { setToken,setUsername } from "../../utils/cookies";
+import { setToken,setUsername } from "@utils/cookies";
 class LoginForm extends Component{
     constructor(){
         super();

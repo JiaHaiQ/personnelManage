@@ -2,9 +2,9 @@ import React,{ Component } from "react";
 // antd
 import { Button, message } from 'antd';
 // 验证
-import { validata_email } from '../../utils/validata';
+import { validata_email } from '@utils/validata';
 //api
-import { GetCode } from "../../api/account";
+import { GetCode } from "@api/account";
 // 定时器
 let timer = null;
 //class

@@ -4,11 +4,11 @@ import "./index.scss";
 import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined, UnlockOutlined } from '@ant-design/icons';
 // 验证
-import { validata_pass } from '../../utils/validata';
+import { validata_pass } from '@utils/validata';
 // api
-import { Register } from "../../api/account";
+import { Register } from "@api/account";
 // 组件
-import Code from "../../components/code/Index";
+import Code from "@c/code/Index";
 // 加密
 import CryptoJs from "crypto-js";
 class RegisterForm extends Component{
