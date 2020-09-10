@@ -55,11 +55,15 @@ class DepartmentAdd extends Component{
         {...this.state.formLayout}
         onFinish={this.onSubmit}
         >
-            <Form.Item label="部门名称" name="name">
-              <Input />
+            <Form.Item 
+            label="部门名称" 
+            name="name" 
+            rules={[{required:true,message:"请输入部门名称!"}]}
+            >
+              <Input placeholder="请输入部门名称"/>
             </Form.Item>
             <Form.Item label="部门人数" name="number">
-              <InputNumber min={0} max={100}/>
+              <InputNumber min={0} max={100} />
             </Form.Item>
             <Form.Item label="禁启用" name="status">
               <Radio.Group>
@@ -67,8 +71,12 @@ class DepartmentAdd extends Component{
                 <Radio value={false}>禁用</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item label="描述" name="content">
-              <Input.TextArea />
+            <Form.Item 
+            label="描述" 
+            name="content" 
+            rules={[{required:true,message:"请输入部门描述!"}]}
+            >
+              <Input.TextArea placeholder="请输入部门描述"/>
             </Form.Item>
             <Form.Item>
               <Button loading={this.state.loading} type="primary" htmlType="submit">确定</Button>
