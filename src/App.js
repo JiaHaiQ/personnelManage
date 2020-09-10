@@ -3,7 +3,7 @@ import {Switch, Route, BrowserRouter} from 'react-router-dom';
 //引组件
 import Login from './views/login/Index';
 import Index from './views/index/Index';
-import PrivateRouter from './components/privateRouter/Index';
+import PrivateRouter from '@c/privateRouter/Index';
 
 class App extends Component{
   constructor(props){

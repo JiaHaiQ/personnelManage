@@ -1,5 +1,5 @@
 /** 自动化工程 */
-const files = require.context("../../views/", true, /\.js$/);
+const files = require.context("@/views/", true, /\.js$/);
 const components = [];
 files.keys().map(key => {
   if(key.includes("./index/") || key.includes("./login/")) {

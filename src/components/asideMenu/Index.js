@@ -2,7 +2,7 @@ import React,{ Component, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Menu } from "antd";
 import { UserOutlined } from '@ant-design/icons';
-import Router from '../../router/Index';
+import Router from '@/router/Index';
 const { SubMenu } = Menu;
 // console.log(Router)
 class asideMenu extends Component {
