@@ -65,7 +65,7 @@ class Code extends Component{
     };
     /** 倒计时 */ 
     countDown = () => {
-        let sec = 60;
+        let sec = 30;
         this.setState({
             btn_loading:false,
             btn_disabled:true,
