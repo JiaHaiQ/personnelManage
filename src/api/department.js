@@ -18,9 +18,32 @@ export function getDepartmentList(data){
 }
 /**删除部门 */
 export function deleteDepartment(data){
-    console.log(data)
     return service.request({
         url: "/department/delete/",
+        method: "post",
+        data
+    })
+}
+/**修改部门 */
+export function editDepartment(data){
+    return service.request({
+        url: "/department/edit/",
+        method: "post",
+        data
+    })
+}
+/**禁启用 */
+export function departmentStatus(data){
+    return service.request({
+        url: "/department/status/",
+        method: "post",
+        data
+    })
+}
+/**获取部门详情 */
+export function departmentDetailed(data){
+    return service.request({
+        url: "/department/detailed/",
         method: "post",
         data
     })

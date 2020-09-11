@@ -2,18 +2,35 @@ import React,{Component} from 'react';
 // antd
 import { Form, Input, Button, InputNumber, Radio, message } from 'antd';
 // api
-import { DepartmentAddApi } from "@api/department";
+import { DepartmentAddApi, departmentDetailed, editDepartment } from "@api/department";
 class DepartmentAdd extends Component{
   constructor(props){
     super(props);
     this.state = {
       loading: false,
+      id: "",
       formLayout: {
         labelCol: {span:2},
         wrapperCol: {span:20}
       }
     };
   };
+  componentWillMount(){
+    if(this.props.location.state) {
+      this.setState({id:this.props.location.state.id})
+    }
+  };
+  componentDidMount(){
+    this.getDetailed()
+  };
+  // 获取部门详情
+  getDetailed = () => {
+    if(!this.props.location.state){return false}
+    departmentDetailed({id:this.state.id}).then(res => {
+      // console.log(res.data.data)
+      this.refs.form.setFieldsValue(res.data.data)
+    })
+  }
   // 提交添加
   onSubmit = (value) => {
     // console.log(value)
@@ -32,8 +49,11 @@ class DepartmentAdd extends Component{
     this.setState({
       loading:true
     })
+    this.state.id ? this.onHandlerEdit(value) : this.onHandlerAdd(value)
+  }
+  /** 添加信息 */
+  onHandlerAdd = (value) => {
     DepartmentAddApi(value).then(res =>{
-      // console.log(res)
       const data = res.data
       message.success(data.message)
       this.setState({
@@ -45,6 +65,17 @@ class DepartmentAdd extends Component{
       this.setState({
         loading:false
       })
+    })
+  }
+  /** 编辑信息 */
+  onHandlerEdit = (value) => {
+    let editData = value;
+    editData.id = this.state.id
+    editDepartment(editData).then(res => {
+      message.success(res.data.message)
+      this.setState({loading:false})
+    }).catch(error => {
+      this.setState({loading:false})
     })
   }
   render(){

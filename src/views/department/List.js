@@ -1,8 +1,9 @@
 import React,{Component, Fragment} from 'react';
+import { Link } from 'react-router-dom';
 // antd
-import { Form, Input, Button, Table, Switch, message } from 'antd';
+import { Form, Input, Button, Table, Switch, message, Modal, Space } from 'antd';
 // api
-import { getDepartmentList, deleteDepartment } from "@api/department";
+import { getDepartmentList, deleteDepartment, departmentStatus } from "@api/department";
 class DepartmentList extends Component{
   constructor(props){
     super(props);
@@ -13,6 +14,10 @@ class DepartmentList extends Component{
       keyWord: "",
       // 复选框
       selectedRowKeys: [],
+      // 删除弹框
+      visible: false,
+      confirmLoading: false,
+      id: "",
       // 表头
       columns: [
         {title: "部门名称", dataIndex: "name", key: "name"},
@@ -21,7 +26,14 @@ class DepartmentList extends Component{
           dataIndex: "status", 
           key: "status",
           render: (text,rowData) => {
-            return <Switch checkedChildren="启用" unCheckedChildren="禁用" defaultChecked={rowData.status === "1" ? true : false} />
+            return (
+              <Switch 
+              checkedChildren="启用" 
+              unCheckedChildren="禁用" 
+              defaultChecked={rowData.status === "1" ? true : false} 
+              onChange={()=>this.onHandlerSwitch(rowData)}
+              />
+            )
           }
         },
         {title: "人员数量", dataIndex: "number", key: "number"},
@@ -33,7 +45,9 @@ class DepartmentList extends Component{
           render: (text,rowData) => {
             return (
               <div className="inline-button">
-                <Button type="primary">编辑</Button>
+                <Button type="primary" onClick={()=>this.onHandlerEdit(rowData.id)}>
+                  <Link to={{pathname:"/index/department/add",state:{id:rowData.id}}}>编辑</Link>
+                </Button>
                 <Button type="danger" onClick={()=>this.onHandlerDelete(rowData.id)}>删除</Button>
               </div>
             )
@@ -76,17 +90,48 @@ class DepartmentList extends Component{
     })
     this.searchDepartment()
   }
-  // 删除
-  onHandlerDelete = (id) => {
+  // 删除部门
+  onHandlerDelete(id){
     if(!id){return false}
-    deleteDepartment({id}).then(res => {
-      message.success(res.data.message);
-      this.searchDepartment();
+    this.setState({
+      visible: true,
+      id
     })
   };
+  // 禁启用
+  onHandlerSwitch(data){
+    if(!data){return false}
+    // console.log(typeof data.status)
+    let statusData = {
+      id: Number(data.id),
+      status: data.status === 1 ? false : true
+    }
+    // console.log(JSON.stringify(statusData))
+    departmentStatus(statusData).then(res => {
+      message.success(res.data.message);
+      // this.searchDepartment();
+    })
+  }
+  // 编辑
+  onHandlerEdit(id){
+
+  }
   // 选择复选框
   onCheckBox = (selectedRowKeys) => {
     this.setState({selectedRowKeys})
+  }
+  // 窗口弹出
+  modalThen = () => {
+    this.setState({confirmLoading: true})
+    deleteDepartment({id:this.state.id}).then(res => {
+      message.success(res.data.message);
+      this.setState({
+        visible: false,
+        confirmLoading: false,
+        id: ""
+      })
+      this.searchDepartment();
+    })
   }
 
   render(){
@@ -105,6 +150,17 @@ class DepartmentList extends Component{
             <div className="table-wrap">
               <Table rowSelection={rowSelection} rowKey="id" columns={columns} dataSource={data} bordered></Table>
             </div>
+            <Modal
+            title="提示"
+            visible={this.state.visible}
+            onOk={this.modalThen}
+            onCancel={()=>{this.setState({visible:false})}}
+            okText="确认"
+            cancelText="取消"
+            confirmLoading={this.state.confirmLoading}
+          >
+            <p className="text-center">确定删除此信息？<Space className="color-red">删除后无法恢复。</Space></p>
+          </Modal>
         </Fragment>
     )
   }
