@@ -1,7 +1,7 @@
 import React,{Component, Fragment} from 'react';
 import { Link } from 'react-router-dom';
 // antd
-import { Form, Input, Button, Table, Switch, message, Modal, Space } from 'antd';
+import { Form, Input, Button, Table, Switch, message, Modal } from 'antd';
 // api
 import { getDepartmentList, deleteDepartment, departmentStatus } from "@api/department";
 class DepartmentList extends Component{
@@ -17,6 +17,8 @@ class DepartmentList extends Component{
       // 删除弹框
       visible: false,
       confirmLoading: false,
+      // 表格加载
+      loadingTable: false,
       id: "",
       // 表头
       columns: [
@@ -28,6 +30,7 @@ class DepartmentList extends Component{
           render: (text,rowData) => {
             return (
               <Switch 
+              loading={rowData.id === this.state.id}
               checkedChildren="启用" 
               unCheckedChildren="禁用" 
               defaultChecked={rowData.status === "1" ? true : false} 
@@ -71,18 +74,26 @@ class DepartmentList extends Component{
     if(keyWord){
       searchData.name = keyWord
     }
+    this.setState({loadingTable:true})
+    // 获取表数据
     getDepartmentList(searchData).then(res => {
       // console.log(res)
       const listData = res.data.data;
       if(listData){
         this.setState({
-          data: listData.data
+          data: listData.data,
+          loadingTable:false
         })
       }
+    }).catch(error => {
+      this.setState({loadingTable:true})
     })
   };
   // 搜索按钮触发
   onFinish = (value) => {
+    if(this.state.loadingTable){
+      return false
+    }
     this.setState({
       pageNumber: 1,
       pageSize: 10,
@@ -90,9 +101,16 @@ class DepartmentList extends Component{
     })
     this.searchDepartment()
   }
-  // 删除部门
+  // 删除部门按钮
   onHandlerDelete(id){
-    if(!id){return false}
+    // 批量删除
+    if(!id){
+      if(this.state.selectedRowKeys.length === 0){ 
+        message.warning("未选择部门！")
+        return false 
+      }
+      id = this.state.selectedRowKeys.join()
+    }
     this.setState({
       visible: true,
       id
@@ -103,13 +121,17 @@ class DepartmentList extends Component{
     if(!data){return false}
     // console.log(typeof data.status)
     let statusData = {
-      id: Number(data.id),
-      status: data.status === 1 ? false : true
+      id: data.id,
+      status: data.status === "1" ? false : true
     }
+    this.setState({id:data.id})
     // console.log(JSON.stringify(statusData))
     departmentStatus(statusData).then(res => {
       message.success(res.data.message);
+      this.setState({id:""})
       // this.searchDepartment();
+    }).catch(error => {
+      this.setState({id:""})
     })
   }
   // 编辑
@@ -123,19 +145,21 @@ class DepartmentList extends Component{
   // 窗口弹出
   modalThen = () => {
     this.setState({confirmLoading: true})
+    // 删除方法
     deleteDepartment({id:this.state.id}).then(res => {
       message.success(res.data.message);
       this.setState({
         visible: false,
         confirmLoading: false,
-        id: ""
+        id: "",
+        selectedRowKeys: []
       })
       this.searchDepartment();
     })
   }
 
   render(){
-    const {columns, data} = this.state;
+    const {columns, data, visible, confirmLoading, loadingTable} = this.state;
     const rowSelection = {
       onChange: this.onCheckBox
     }
@@ -145,22 +169,31 @@ class DepartmentList extends Component{
               <Form.Item label="部门名称" name="name">
                 <Input placeholder="请输入部门名称"/>
               </Form.Item> 
-              <Button loading={this.state.loading} type="primary" htmlType="submit">搜索</Button>
+              <Button type="primary" htmlType="submit">搜索</Button>
             </Form>  
             <div className="table-wrap">
-              <Table rowSelection={rowSelection} rowKey="id" columns={columns} dataSource={data} bordered></Table>
+              <Table 
+                loading={loadingTable} 
+                rowSelection={rowSelection} 
+                rowKey="id" 
+                columns={columns} 
+                dataSource={data} 
+                bordered
+              >
+              </Table>
+              <Button type="danger" onClick={()=>this.onHandlerDelete()}>批量删除</Button>
             </div>
             <Modal
-            title="提示"
-            visible={this.state.visible}
-            onOk={this.modalThen}
-            onCancel={()=>{this.setState({visible:false})}}
-            okText="确认"
-            cancelText="取消"
-            confirmLoading={this.state.confirmLoading}
-          >
-            <p className="text-center">确定删除此信息？<Space className="color-red">删除后无法恢复。</Space></p>
-          </Modal>
+              title="提示"
+              visible={visible}
+              onOk={this.modalThen}
+              onCancel={()=>{this.setState({visible:false})}}
+              okText="确认"
+              cancelText="取消"
+              confirmLoading={confirmLoading}
+            >
+              <p className="text-center">确定删除此信息？<strong className="color-red">删除后无法恢复。</strong></p>
+            </Modal>
         </Fragment>
     )
   }
