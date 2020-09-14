@@ -110,7 +110,7 @@ class DepartmentAdd extends Component{
               <Input.TextArea placeholder="请输入部门描述"/>
             </Form.Item>
             <Form.Item>
-              <Button loading={this.state.loading} type="primary" htmlType="submit">确定</Button>
+              <Button loading={this.state.loading} type="primary" htmlType="submit">{this.state.id === "" ? "添加":"编辑"}</Button>
             </Form.Item>    
         </Form>
     )
