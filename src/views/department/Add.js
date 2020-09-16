@@ -1,18 +1,65 @@
-import React,{Component} from 'react';
+import React,{Component, Fragment } from 'react';
 // antd
-import { Form, Input, Button, InputNumber, Radio, message } from 'antd';
+import { message } from 'antd';
 // api
 import { DepartmentAddApi, departmentDetailed, editDepartment } from "@api/department";
+// form组件
+import FormComponent from '@c/form/Index';
 class DepartmentAdd extends Component{
   constructor(props){
     super(props);
     this.state = {
       loading: false,
       id: "",
+      formConfig: {
+        url:"departmentAdd",
+        initValue: {
+          number: 1,
+          status: true
+        },
+        setFieldValue: {}
+      },
       formLayout: {
         labelCol: {span:2},
         wrapperCol: {span:20}
-      }
+      },
+      formItem: [
+        { 
+          type: "Input", 
+          label: "部门名称", 
+          name: "name", 
+          required: true, 
+          style: { width: "300px" },
+          placeholder: "请输入部门名称"
+        },
+        { 
+          type: "InputNumber", 
+          label: "部门人数", 
+          name: "number", 
+          min: 1,
+          max: 200,
+          required: true, 
+          style: { width: "200px" }
+        },
+        { 
+          type: "Radio", 
+          label: "禁启用", 
+          name: "status", 
+          required: true,
+          options: [
+            { label: "启用", value: true},
+            { label: "禁用", value: false},
+          ],
+        },
+        { 
+            type: "Input",
+            label: "描述", 
+            name: "content", 
+            required: true, 
+            placeholder: "请输入描述内容"
+        }
+        
+      ]
     };
   };
   componentWillMount(){
@@ -23,48 +70,23 @@ class DepartmentAdd extends Component{
   componentDidMount(){
     this.getDetailed()
   };
+  // 获取子组件实例
+  getChildRef = (ref) => {
+    // console.log(ref)
+    this.FormComponent = ref; // 存储子组件
+  }
   // 获取部门详情
   getDetailed = () => {
     if(!this.props.location.state){return false}
     departmentDetailed({id:this.state.id}).then(res => {
-      // console.log(res.data.data)
-      this.refs.form.setFieldsValue(res.data.data)
-    })
-  }
-  // 提交添加
-  onSubmit = (value) => {
-    // console.log(value)
-    if(!value.name){
-      message.error("请输入部门名称！")
-      return false
-    }
-    if(!value.number || value.number===0){
-      message.error("人员数量不能为0")
-      return false
-    }
-    if(!value.content){
-      message.error("请输入部门描述！")
-      return false
-    }
-    this.setState({
-      loading:true
-    })
-    this.state.id ? this.onHandlerEdit(value) : this.onHandlerAdd(value)
-  }
-  /** 添加信息 */
-  onHandlerAdd = (value) => {
-    DepartmentAddApi(value).then(res =>{
-      const data = res.data
-      message.success(data.message)
       this.setState({
-        loading:false
-      });
-      // 重置form
-      this.refs.form.resetFields();
-    }).catch(error => {
-      this.setState({
-        loading:false
+        formConfig: {
+            ...this.state.formConfig,
+            setFieldValue: res.data.data
+        }
       })
+      // 赋值表单
+      // this.refs.form.setFieldsValue(res.data.data)
     })
   }
   /** 编辑信息 */
@@ -72,47 +94,43 @@ class DepartmentAdd extends Component{
     let editData = value;
     editData.id = this.state.id
     editDepartment(editData).then(res => {
-      message.success(res.data.message)
-      this.setState({loading:false})
+      message.success(res.data.message);
+      this.setState({loading:false});
+      this.getDetailed(editData.id);
     }).catch(error => {
       this.setState({loading:false})
     })
   }
+  /** 添加信息 */
+  onHandlerAdd = (value) => {
+    let addData = value;
+    DepartmentAddApi(addData).then(res => {
+        const data = res.data;
+        message.success(data.message);
+        this.setState({ loading: false });
+        // 调用FormComponent组件清除表单
+        this.FormComponent.clearableForm();
+    }).catch(error => {
+        this.setState({ loading: false })
+    })
+}
+/** 提交表单 */
+onHandlerSubmit = (value) => {
+    this.state.id ? this.onHandlerEdit(value) : this.onHandlerAdd(value);
+}
   render(){
+    const { formItem, formLayout, formConfig, id } = this.state;
     return(
-        <Form 
-        ref="form"
-        initialValues={{status:true,number:0}}
-        {...this.state.formLayout}
-        onFinish={this.onSubmit}
-        >
-            <Form.Item 
-            label="部门名称" 
-            name="name" 
-            rules={[{required:true,message:"请输入部门名称!"}]}
-            >
-              <Input placeholder="请输入部门名称"/>
-            </Form.Item>
-            <Form.Item label="部门人数" name="number">
-              <InputNumber min={0} max={100} />
-            </Form.Item>
-            <Form.Item label="禁启用" name="status">
-              <Radio.Group>
-                <Radio value={true}>启用</Radio>
-                <Radio value={false}>禁用</Radio>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item 
-            label="描述" 
-            name="content" 
-            rules={[{required:true,message:"请输入部门描述!"}]}
-            >
-              <Input.TextArea placeholder="请输入部门描述"/>
-            </Form.Item>
-            <Form.Item>
-              <Button loading={this.state.loading} type="primary" htmlType="submit">{this.state.id === "" ? "添加":"编辑"}</Button>
-            </Form.Item>    
-        </Form>
+      <Fragment>
+        <FormComponent
+          onRef={this.getChildRef} 
+          formItem={ formItem } 
+          formLayout={formLayout} 
+          formConfig={formConfig} 
+          submit={this.onHandlerSubmit}
+          btnText={id}
+        />
+      </Fragment>
     )
   }
 }
