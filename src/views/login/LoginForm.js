@@ -50,7 +50,7 @@ class LoginForm extends Component{
             // 存数据
             setToken(data.token);
             setUsername(data.username);
-            message.success(res.data.message);
+            message.success(res.data.message,2);
             this.props.history.push("/index");
         }).catch(error => {
             this.setState({

@@ -20,7 +20,7 @@ class Code extends Component{
         };    
     };
     //监听接收父组件的传值
-    componentWillReceiveProps({ username }){
+    UNSAFE_componentWillReceiveProps({ username }){
         // console.log(username)
         this.setState({
             username

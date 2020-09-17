@@ -62,7 +62,7 @@ class DepartmentAdd extends Component{
       ]
     };
   };
-  componentWillMount(){
+  UNSAFE_componentWillMount(){
     if(this.props.location.state) {
       this.setState({id:this.props.location.state.id})
     }
@@ -108,7 +108,7 @@ class DepartmentAdd extends Component{
         const data = res.data;
         message.success(data.message);
         this.setState({ loading: false });
-        // 调用FormComponent组件清除表单
+        // 调用FormComponent组件方法清除表单
         this.FormComponent.clearableForm();
     }).catch(error => {
         this.setState({ loading: false })

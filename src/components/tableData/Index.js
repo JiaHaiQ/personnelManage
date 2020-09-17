@@ -63,8 +63,8 @@ class TableComponent extends Component{
     };
     /** 删除 */
     onHandlerDelete(id){
-        this.setState({ modalVisible: true })
         if(id) { this.setState({ checkboxValue: [id] }); }
+        this.setState({ modalVisible: true })
     }
     /** 选择复选框 */ 
     onCheckBox = (checkboxValue) => {

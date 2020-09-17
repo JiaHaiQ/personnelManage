@@ -9,7 +9,7 @@ class layoutHeader extends Component {
         };
     }
     //监听接收父组件props值变化
-    componentWillReceiveProps({ collapsed }){
+    UNSAFE_componentWillReceiveProps({ collapsed }){
         this.setState({
             collapsed
         })

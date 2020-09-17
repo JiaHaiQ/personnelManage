@@ -21,7 +21,7 @@ class FormComponent extends Component{
         }
       };
     };
-    componentWillReceiveProps({ formConfig }){
+    UNSAFE_componentWillReceiveProps({ formConfig }){
         // 赋值表单
         this.refs.form.setFieldsValue(formConfig.setFieldValue)
     }
@@ -95,7 +95,7 @@ class FormComponent extends Component{
         const { formItem } = this.props;
         if(!formItem || (formItem && formItem.length === 0)){ return false };
         const formList = [];
-        formItem.map( item => {
+        formItem.forEach( item => {
             if(item.type === "Input"){ formList.push(this.inputElem(item)) }
             if(item.type === "InputNumber"){ formList.push(this.inputNumberElem(item)) }
             if(item.type === "Select"){ formList.push(this.selectElem(item)) }
@@ -109,7 +109,6 @@ class FormComponent extends Component{
     }
     // 提交
     onSubmit = (value) => {
-        console.log(value)
         // 传入的 submit
         if(this.props.submit) {
             this.props.submit(value);
