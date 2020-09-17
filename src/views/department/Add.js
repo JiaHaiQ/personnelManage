@@ -72,7 +72,6 @@ class DepartmentAdd extends Component{
   };
   // 获取子组件实例
   getChildRef = (ref) => {
-    // console.log(ref)
     this.FormComponent = ref; // 存储子组件
   }
   // 获取部门详情

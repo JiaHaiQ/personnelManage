@@ -1,13 +1,14 @@
 import React,{ Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 // antd
-import {  Modal, message, Input, Form, Button } from 'antd';
+import {  Modal, message } from 'antd';
 // api
 import { TableList, TableDelete } from "@api/common";
 // url
 import requestUrl from "@api/requestUrl";
-// Table
+// 组件
 import TableBasis from "./Table";
+import FormSearch from "../formSearch/Index";
 class TableComponent extends Component{
     constructor(){
     super();
@@ -15,7 +16,6 @@ class TableComponent extends Component{
         // 请求参数
         pageNumber: 1, 
         pageSize: 10, 
-        keyWord: "",
         searchData: {},
         // loading
         loadingTable: true,
@@ -37,18 +37,18 @@ class TableComponent extends Component{
     }
     /** 获取列表 */
     getAllList = () => {
-        const {pageNumber, pageSize, keyWord } = this.state;
+        const {pageNumber, pageSize, searchData } = this.state;
         const requestData = {
             url: requestUrl[this.props.config.url],
-            data: {
-                pageNumber,
-                pageSize,
+            data: { pageNumber, pageSize,}
+        }
+        // 筛选数据过滤
+        if(JSON.stringify(searchData) !== "{}"){
+            for(let key in searchData){
+                requestData.data[key] = searchData[key]
             }
         }
-        if(keyWord) { requestData.data.name = keyWord }
-        // 获取表数据
         TableList(requestData).then(res => {
-            // console.log(res)
             const listData = res.data.data;
             if(listData){
                 this.setState({
@@ -91,6 +91,10 @@ class TableComponent extends Component{
     modalThen = () => {
         if(this.state.checkboxValue.length === 0) {
             message.warning("请选择需要删除的数据!");
+            this.setState({
+                modalVisible: false,
+                modalConfirmLoading: false,
+            })
             return false;
         }
         this.setState({ modalConfirmLoading: true })
@@ -112,32 +116,26 @@ class TableComponent extends Component{
             this.getAllList()
         })
     };
-    // 搜索按钮触发
-    onFinish = (value) => {
-        if(this.state.loadingTable){
-            return false
-        }
+    /** 搜索 */
+    search = (searchData) => {
         this.setState({
             pageNumber: 1,
             pageSize: 10,
-            keyWord: value.name,
+            searchData
+        },() => {
+            this.getAllList()
         })
-        this.getAllList()
     }
     render(){
         const { loadingTable, data, total, modalVisible, modalConfirmLoading } = this.state;
-        const { thead, checkbox, rowkey } = this.props.config
+        const { thead, checkbox, rowkey, formItem } = this.props.config
         const rowSelection = {
             onChange: this.onCheckBox
         }
         return (
             <Fragment>
-                <Form layout="inline" onFinish={this.onFinish}>
-                    <Form.Item label="部门名称" name="name">
-                        <Input placeholder="请输入部门名称"/>
-                    </Form.Item> 
-                    <Button type="primary" htmlType="submit">搜索</Button>
-                </Form>  
+                {/* 筛选 */}
+                <FormSearch formItem={formItem} search={this.search} /> 
                 {/* Table UI组件 */}
                 <div className="table-wrap">
                     <TableBasis 

@@ -20,6 +20,7 @@ class DepartmentList extends Component{
       tableConfig: {
         url: "departmentList",
         checkbox: true,
+        // 表头
         thead: [
           {title: "部门名称", dataIndex: "name", key: "name"},
           {
@@ -55,6 +56,14 @@ class DepartmentList extends Component{
               )
             }
           }
+        ],
+        formItem: [
+          { 
+            type: "Input", 
+            label: "部门名称", 
+            name: "name",
+            placeholder: "请输入部门名称"
+          }
         ]
       },
       // 表数据
@@ -67,19 +76,16 @@ class DepartmentList extends Component{
   }
   // 获取子组件实例
   getChildRef = (ref) => {
-    // console.log(ref)
     this.tableComponent = ref; // 存储子组件
   }
   // 禁启用
   onHandlerSwitch(data){
     if(!data){return false}
-    // console.log(typeof data.status)
     let statusData = {
       id: data.id,
       status: data.status === "1" ? false : true
     }
     this.setState({id:data.id})
-    // console.log(JSON.stringify(statusData))
     departmentStatus(statusData).then(res => {
       message.success(res.data.message);
       this.setState({id:""})
