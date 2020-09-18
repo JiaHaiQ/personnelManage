@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { requestData } from "@api/common";
 // url
 import requestUrl from "@api/requestUrl";
+// 数据
+import Store from '@/store/Index';
 // antd
 import { Input, Form, Select, Radio, InputNumber, Button, message } from 'antd';
 const { Option } = Select;
@@ -98,7 +100,10 @@ class FormComponent extends Component{
         formItem.forEach( item => {
             if(item.type === "Input"){ formList.push(this.inputElem(item)) }
             if(item.type === "InputNumber"){ formList.push(this.inputNumberElem(item)) }
-            if(item.type === "Select"){ formList.push(this.selectElem(item)) }
+            if(item.type === "Select"){ 
+                item.options = Store.getState().config[item.optionsKey];
+                formList.push(this.selectElem(item)) 
+            }
             if(item.type === "Radio"){ formList.push(this.radioElem(item)) }
         })
         return formList;

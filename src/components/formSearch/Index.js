@@ -2,7 +2,7 @@ import React,{ Component, Fragment } from 'react';
 // propTypes
 import PropTypes from 'prop-types';
 // 数据
-import Global from "@/js/global";
+import Store from '@/store/Index';
 // antd
 import { Input, Form, Select, Radio, InputNumber, Button } from 'antd';
 const { Option } = Select;
@@ -93,7 +93,7 @@ class FormSearch extends Component{
             if(item.type === "Input"){ formList.push(this.inputElem(item)) }
             if(item.type === "InputNumber"){ formList.push(this.inputNumberElem(item)) }
             if(item.type === "Select"){ 
-                item.options = Global[item.optionsKey];
+                item.options = Store.getState().config[item.optionsKey];
                 formList.push(this.selectElem(item)) 
             }
             if(item.type === "Radio"){ formList.push(this.radioElem(item)) }
