@@ -1,3 +1,4 @@
+import { configAddStatus } from "../Type";
 // 全局参数
 const config = {
     status: [
@@ -7,7 +8,16 @@ const config = {
 }
 // 默认配置 Reducer
 const configReducer = function(state = config, action){
-    return state;
+    switch(action.type){
+        case configAddStatus: {
+            return {
+                ...state,
+                status: [...state.status, action.payload],
+            }
+        }
+        default:
+            return state;
+    }
 }
 
 export default configReducer;
