@@ -1,15 +1,15 @@
-import { configAddStatus, configUploadStatus } from "../Type";
+import { configAddStatusType, configUploadStatusType } from "../Type";
 
-export function addStatus(label, value) {
+export function addStatusAction(label, value) {
     return {
-        type: configAddStatus,
+        type: configAddStatusType,
         payload: { label, value }
     }
 }
 
-export function uploadStatus(label, value) {
+export function uploadStatusAction(label, value) {
     return {
-        type: configUploadStatus,
+        type: configUploadStatusType,
         payload: { label, value }
     }
 }

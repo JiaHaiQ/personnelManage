@@ -1,4 +1,6 @@
-export const configUploadStatus = "UPLOAD_STATUS";
-export const configAddStatus = "ADD_STATUS";
-export const addDepartmentListData = "ADD_DEPARTMENT_LIST";
-export const updataDepartmentListData = "UPDATA_DEPARTMENT_LIST";
+export const configUploadStatusTypeType = "UPLOAD_STATUS";
+export const configAddStatusType = "ADD_STATUS";
+export const addDepartmentListDataType = "ADD_DEPARTMENT_LIST";
+export const updataDepartmentListDataType = "UPDATA_DEPARTMENT_LIST";
+export const setTokenType = "SET_TOKEN";
+export const setUsernameType = "SET_USERNAME";

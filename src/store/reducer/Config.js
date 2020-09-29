@@ -1,4 +1,4 @@
-import { configAddStatus } from "../Type";
+import { configAddStatusType } from "../Type";
 // 全局参数
 const config = {
     status: [
@@ -6,10 +6,10 @@ const config = {
         { label: "禁用", value: false },
     ],
 }
-// 默认配置 Reducer
+// 全局配置 Reducer
 const configReducer = function (state = config, action) {
     switch (action.type) {
-        case configAddStatus: {
+        case configAddStatusType: {
             return {
                 ...state,
                 status: [...state.status, action.payload],

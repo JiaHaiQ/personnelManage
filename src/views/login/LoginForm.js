@@ -12,8 +12,11 @@ import { Login } from "@api/account";
 import Code from "@c/code/Index";
 // 加密
 import CryptoJs from "crypto-js";
-// 方法
-import { setToken, setUsername } from "@utils/cookies";
+// connect
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+// store-action
+import { setTokenAction, setUsernameAction } from '@/store/action/App';
 class LoginForm extends Component {
     constructor() {
         super();
@@ -45,11 +48,10 @@ class LoginForm extends Component {
             this.setState({
                 loginLoading: false
             })
-            // console.log(res)
             const data = res.data.data;
-            // 存数据
-            setToken(data.token);
-            setUsername(data.username);
+            // action
+            this.props.actions.setToken(data.token)
+            this.props.actions.setUsername(data.username)
             message.success(res.data.message, 2);
             this.props.history.push("/index");
         }).catch(error => {
@@ -154,4 +156,15 @@ class LoginForm extends Component {
     }
 }
 
-export default withRouter(LoginForm);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators({
+            setToken: setTokenAction,
+            setUsername: setUsernameAction
+        }, dispatch)
+    }
+}
+export default connect(
+    null,
+    mapDispatchToProps
+)(withRouter(LoginForm));

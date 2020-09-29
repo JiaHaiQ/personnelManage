@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addDepartmentList, updataDepartmentList } from '@/store/action/Department';
+import { addDepartmentListAction, updataDepartmentListAction } from '@/store/action/Department';
 // api
 import { TableList } from "@api/common";
 // url
@@ -123,6 +123,7 @@ class FormSearch extends Component {
         }
         TableList(requestData).then(res => {
             const listData = res.data.data;
+            // store-actions
             this.props.searchListdata.addData(listData)
         }).catch(error => {
 
@@ -176,8 +177,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         searchListdata: bindActionCreators({
-            addData: addDepartmentList,
-            upData: updataDepartmentList
+            addData: addDepartmentListAction,
+            upData: updataDepartmentListAction
         }, dispatch)
     }
 }

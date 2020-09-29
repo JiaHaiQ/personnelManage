@@ -1,14 +1,14 @@
-import { addDepartmentListData, updataDepartmentListData } from "../Type";
+import { addDepartmentListDataType, updataDepartmentListDataType } from "../Type";
 
-export function addDepartmentList(params) {
+export function addDepartmentListAction(params) {
     return {
-        type: addDepartmentListData,
+        type: addDepartmentListDataType,
         data: params.data
     }
 }
-export function updataDepartmentList(params) {
+export function updataDepartmentListAction(params) {
     return {
-        type: updataDepartmentListData,
+        type: updataDepartmentListDataType,
         data: params.data
     }
 }
