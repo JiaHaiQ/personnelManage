@@ -1,19 +1,19 @@
-import React,{ Component, Fragment } from "react";
+import React, { Component, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Menu } from "antd";
 import { UserOutlined } from '@ant-design/icons';
 import Router from '@/router/Index';
 const { SubMenu } = Menu;
-// console.log(Router)
+/** 左侧菜单组件 */
 class asideMenu extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             selectedKeys: [],
             openKeys: []
         };
     }
-    componentDidMount(){
+    componentDidMount() {
         const pathname = this.props.location.pathname;
         const menuKey = pathname.split("/").slice(0, 3).join("/");
         const menuHigh = {
@@ -27,12 +27,12 @@ class asideMenu extends Component {
     selectMenu = ({ key, keyPath }) => {
         const menuHigh = {
             selectedKeys: key,
-            openKeys: keyPath[keyPath.length-1]
+            openKeys: keyPath[keyPath.length - 1]
         }
         this.selectMenuHigh(menuHigh);
     }
     // 菜单高光
-    selectMenuHigh = ({selectedKeys, openKeys}) => {
+    selectMenuHigh = ({ selectedKeys, openKeys }) => {
         this.setState({
             selectedKeys: [selectedKeys],
             openKeys: [openKeys]
@@ -41,11 +41,11 @@ class asideMenu extends Component {
     openMenu = (openKeys) => {
         // console.log(openKeys)
         this.setState({
-            openKeys: [openKeys[openKeys.length-1]]
+            openKeys: [openKeys[openKeys.length - 1]]
         })
     }
     // 菜单
-    renderMenu = ({key, title}) => {
+    renderMenu = ({ key, title }) => {
         return (
             <Menu.Item key={key}>
                 <Link to={key}><span>{title}</span></Link>
@@ -53,40 +53,40 @@ class asideMenu extends Component {
         )
     }
     // 子集菜单
-    renderSubMenu = ({key, title, child}) => {
+    renderSubMenu = ({ key, title, child }) => {
         return <SubMenu key={key} icon={<UserOutlined />} title={title}>
             {
                 child && child.map(item => {
-                    return item.child && item.child.length > 0 
-                    ? this.renderSubMenu(item) : this.renderMenu(item)
+                    return item.child && item.child.length > 0
+                        ? this.renderSubMenu(item) : this.renderMenu(item)
                 })
             }
         </SubMenu>
     }
 
-    render(){
+    render() {
         const { selectedKeys, openKeys } = this.state;
         return (
             <Fragment>
                 <Menu
-                onOpenChange={this.openMenu}
-                onClick={this.selectMenu}
-                theme="dark"
-                mode="inline"
-                selectedKeys={selectedKeys}
-                openKeys={openKeys}
-                style={{ height: '100%', borderRight: 0 }}
+                    onOpenChange={this.openMenu}
+                    onClick={this.selectMenu}
+                    theme="dark"
+                    mode="inline"
+                    selectedKeys={selectedKeys}
+                    openKeys={openKeys}
+                    style={{ height: '100%', borderRight: 0 }}
                 >
                     {
                         Router && Router.map(firstItem => {
-                            return firstItem.child && firstItem.child.length > 0 
-                            ? this.renderSubMenu(firstItem) : this.renderMenu(firstItem)
+                            return firstItem.child && firstItem.child.length > 0
+                                ? this.renderSubMenu(firstItem) : this.renderMenu(firstItem)
                         })
                     }
                 </Menu>
             </Fragment>
         )
-    } 
+    }
 }
 
 export default withRouter(asideMenu);

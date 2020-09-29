@@ -1,6 +1,6 @@
 $color:skyblue;
 
-@mixin webkit( $attr, $value ) {
+@mixin webkit($attr, $value) {
     -webkit-#{$attr}: $value;
     -moz-#{$attr}: $value;
     -ms-#{$attr}: $value;

@@ -7,7 +7,7 @@ export function addStatus(label, value) {
     }
 }
 
-export function uploadStatus(label, value){
+export function uploadStatus(label, value) {
     return {
         type: configUploadStatus,
         payload: { label, value }

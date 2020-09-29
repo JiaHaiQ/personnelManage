@@ -1,7 +1,7 @@
 import service from "@utils/request";
 
 /**添加部门 */
-export function DepartmentAddApi(data){
+export function DepartmentAddApi(data) {
     return service.request({
         url: "/department/add/",
         method: "post",
@@ -9,7 +9,7 @@ export function DepartmentAddApi(data){
     })
 }
 /**搜索部门 */
-export function getDepartmentList(data){
+export function getDepartmentList(data) {
     return service.request({
         url: "/department/list/",
         method: "post",
@@ -17,7 +17,7 @@ export function getDepartmentList(data){
     })
 }
 /**删除部门 */
-export function deleteDepartment(data){
+export function deleteDepartment(data) {
     return service.request({
         url: "/department/delete/",
         method: "post",
@@ -25,7 +25,7 @@ export function deleteDepartment(data){
     })
 }
 /**修改部门 */
-export function editDepartment(data){
+export function editDepartment(data) {
     return service.request({
         url: "/department/edit/",
         method: "post",
@@ -33,7 +33,7 @@ export function editDepartment(data){
     })
 }
 /**禁启用 */
-export function departmentStatus(data){
+export function departmentStatus(data) {
     return service.request({
         url: "/department/status/",
         method: "post",
@@ -41,7 +41,7 @@ export function departmentStatus(data){
     })
 }
 /**获取部门详情 */
-export function departmentDetailed(data){
+export function departmentDetailed(data) {
     return service.request({
         url: "/department/detailed/",
         method: "post",

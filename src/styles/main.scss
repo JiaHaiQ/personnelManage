@@ -1,30 +1,39 @@
 //公共样式
 @import "./sassConfig.scss";
 @import "./normalize.scss";
+
 // 背景色
 body {
   background-color: #001529 !important;
 }
+
 // 表格中按钮间隔
 .inline-button {
-  button + button {margin-left: 10px;}
+  button+button {
+    margin-left: 10px;
+  }
 }
+
 // 表外边距
 .table-wrap {
   padding-top: 30px;
 }
+
 // 文本居中
 .text-center {
   text-align: center;
 }
+
 // color
 .color-red {
   color: #f00;
 }
+
 // float right
 .pull-right {
   float: right;
 }
-.spacing-30{
+
+.spacing-30 {
   height: 30px;
 }

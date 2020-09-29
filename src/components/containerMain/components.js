@@ -1,8 +1,8 @@
 /** 自动化工程 */
 const files = require.context("@/views/", true, /\.js$/);
 const components = [];
-files.keys().forEach( key => {
-  if(key.includes("./index/") || key.includes("./login/")) {
+files.keys().forEach(key => {
+  if (key.includes("./index/") || key.includes("./login/")) {
     return false;
   }
   const splitFilesName = key.split(".");

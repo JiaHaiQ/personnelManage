@@ -1,5 +1,5 @@
 // 职位
-const jobReducer = function(state = [], action){
+const jobReducer = function (state = [], action) {
     return state;
 }
 

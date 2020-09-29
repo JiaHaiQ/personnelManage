@@ -1,13 +1,14 @@
-import React,{Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 // antd
 import { Button, Switch, message } from 'antd';
 // api
 import { departmentStatus } from "@api/department";
 // 组件
-import TableComponent from '@c/tableData/Index';
-class DepartmentList extends Component{
-  constructor(props){
+import TableComponent from '@c/tableData/Table';
+import FormSearch from '@c/formSearch/Index';
+class DepartmentList extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       // 搜索参数
@@ -17,52 +18,61 @@ class DepartmentList extends Component{
       // 表格加载
       loadingTable: false,
       id: "",
+      // form配置
+      formItem: [
+        {
+          type: "Input",
+          label: "部门名称",
+          name: "name",
+          placeholder: "请输入部门名称"
+        },
+        {
+          type: "Select",
+          label: "部门名称",
+          name: "status",
+          placeholder: "请选择",
+          style: { width: "120px" },
+          optionsKey: "status"
+        }
+      ],
+      // table配置
       tableConfig: {
         url: "departmentList",
         checkbox: true,
-        // 表头
         thead: [
-          {title: "部门名称", dataIndex: "name", key: "name"},
+          { title: "部门名称", dataIndex: "name", key: "name" },
           {
-            title: "禁启用", 
-            dataIndex: "status", 
+            title: "禁启用",
+            dataIndex: "status",
             key: "status",
-            render: (status,rowData) => {
+            render: (status, rowData) => {
               return (
-                <Switch 
+                <Switch
                   loading={rowData.id === this.state.id}
-                  checkedChildren="启用" 
-                  unCheckedChildren="禁用" 
-                  defaultChecked={status === "1" ? true : false} 
-                  onChange={()=>this.onHandlerSwitch(rowData)}
+                  checkedChildren="启用"
+                  unCheckedChildren="禁用"
+                  defaultChecked={status === "1" ? true : false}
+                  onChange={() => this.onHandlerSwitch(rowData)}
                 />
               )
             }
           },
-          {title: "人员数量", dataIndex: "number", key: "number"},
+          { title: "人员数量", dataIndex: "number", key: "number" },
           {
-            title: "操作", 
-            dataIndex: "open", 
-            key: "open", 
+            title: "操作",
+            dataIndex: "open",
+            key: "open",
             width: 215,
-            render: (text,rowData) => {
+            render: (text, rowData) => {
               return (
                 <div className="inline-button">
                   <Button type="primary">
-                    <Link to={{pathname:"/index/department/add",state:{id:rowData.id}}}>编辑</Link>
+                    <Link to={{ pathname: "/index/department/add", state: { id: rowData.id } }}>编辑</Link>
                   </Button>
-                  <Button type="danger" onClick={()=>this.delete(rowData.id)}>删除</Button>
+                  <Button type="danger" onClick={() => this.delete(rowData.id)}>删除</Button>
                 </div>
               )
             }
-          }
-        ],
-        formItem: [
-          { 
-            type: "Input", 
-            label: "部门名称", 
-            name: "name",
-            placeholder: "请输入部门名称"
           }
         ]
       },
@@ -71,7 +81,7 @@ class DepartmentList extends Component{
     };
   };
   /** 生命周期挂载完成 */
-  componentDidMount(){
+  componentDidMount() {
 
   }
   // 获取子组件实例
@@ -79,18 +89,18 @@ class DepartmentList extends Component{
     this.tableComponent = ref; // 存储子组件
   }
   // 禁启用
-  onHandlerSwitch(data){
-    if(!data){return false}
+  onHandlerSwitch(data) {
+    if (!data) { return false }
     let statusData = {
       id: data.id,
       status: data.status === "1" ? false : true
     }
-    this.setState({id:data.id})
+    this.setState({ id: data.id })
     departmentStatus(statusData).then(res => {
       message.success(res.data.message);
-      this.setState({id:""})
+      this.setState({ id: "" })
     }).catch(error => {
-      this.setState({id:""})
+      this.setState({ id: "" })
     })
   }
   /** 删除 */
@@ -98,11 +108,12 @@ class DepartmentList extends Component{
     this.tableComponent.onHandlerDelete(id)
   }
 
-  render(){
-    return(
-        <Fragment>
-            <TableComponent onRef={this.getChildRef} batchButton={true} config={this.state.tableConfig} />
-        </Fragment>
+  render() {
+    return (
+      <Fragment>
+        <FormSearch formItem={this.state.formItem} />
+        <TableComponent config={this.state.tableConfig} />
+      </Fragment>
     )
   }
 }

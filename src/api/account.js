@@ -1,7 +1,7 @@
 import service from "@utils/request";
 
 /**登录 */
-export function Login(data){
+export function Login(data) {
     return service.request({
         url: "/login/",
         method: "post",
@@ -10,7 +10,7 @@ export function Login(data){
 }
 
 /**注册 */
-export function Register(data){
+export function Register(data) {
     return service.request({
         url: "/register/",
         method: "post",
@@ -19,7 +19,7 @@ export function Register(data){
 }
 
 /**获取验证码 */
-export function GetCode(data){
+export function GetCode(data) {
     // console.log(JSON.stringify(data))
     return service.request({
         url: "/getSms/",

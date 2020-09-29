@@ -1,15 +1,15 @@
-import React,{ Component } from "react";
-import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
+import React, { Component } from "react";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import "./hender.scss";
 class layoutHeader extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             collapsed: props.collapsed,
         };
     }
     //监听接收父组件props值变化
-    UNSAFE_componentWillReceiveProps({ collapsed }){
+    UNSAFE_componentWillReceiveProps({ collapsed }) {
         this.setState({
             collapsed
         })
@@ -17,7 +17,7 @@ class layoutHeader extends Component {
     toggleMenu = () => {
         this.props.toggle()
     }
-    render(){
+    render() {
         const { collapsed } = this.state;
         return (
             <div className={collapsed ? "collapsed-close" : ""}>
@@ -27,12 +27,12 @@ class layoutHeader extends Component {
                         {
                             collapsed === true ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
                         }
-                        
+
                     </span>
                 </div>
             </div>
         )
-    } 
+    }
 }
 
 export default layoutHeader;

@@ -1,18 +1,18 @@
-import React,{Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 // antd
 import { message } from 'antd';
 // api
 import { DepartmentAddApi, departmentDetailed, editDepartment } from "@api/department";
 // form组件
 import FormComponent from '@c/form/Index';
-class DepartmentAdd extends Component{
-  constructor(props){
+class DepartmentAdd extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       loading: false,
       id: "",
       formConfig: {
-        url:"departmentAdd",
+        url: "departmentAdd",
         initValue: {
           number: 1,
           status: true
@@ -20,54 +20,54 @@ class DepartmentAdd extends Component{
         setFieldValue: {}
       },
       formLayout: {
-        labelCol: {span:2},
-        wrapperCol: {span:20}
+        labelCol: { span: 2 },
+        wrapperCol: { span: 20 }
       },
       formItem: [
-        { 
-          type: "Input", 
-          label: "部门名称", 
-          name: "name", 
-          required: true, 
+        {
+          type: "Input",
+          label: "部门名称",
+          name: "name",
+          required: true,
           style: { width: "300px" },
           placeholder: "请输入部门名称"
         },
-        { 
-          type: "InputNumber", 
-          label: "部门人数", 
-          name: "number", 
+        {
+          type: "InputNumber",
+          label: "部门人数",
+          name: "number",
           min: 1,
           max: 200,
-          required: true, 
+          required: true,
           style: { width: "200px" }
         },
-        { 
-          type: "Radio", 
-          label: "禁启用", 
-          name: "status", 
+        {
+          type: "Radio",
+          label: "禁启用",
+          name: "status",
           required: true,
           options: [
-            { label: "启用", value: true},
-            { label: "禁用", value: false},
+            { label: "启用", value: true },
+            { label: "禁用", value: false },
           ],
         },
-        { 
-            type: "Input",
-            label: "描述", 
-            name: "content", 
-            required: true, 
-            placeholder: "请输入描述内容"
+        {
+          type: "Input",
+          label: "描述",
+          name: "content",
+          required: true,
+          placeholder: "请输入描述内容"
         }
-        
+
       ]
     };
   };
-  UNSAFE_componentWillMount(){
-    if(this.props.location.state) {
-      this.setState({id:this.props.location.state.id})
+  UNSAFE_componentWillMount() {
+    if (this.props.location.state) {
+      this.setState({ id: this.props.location.state.id })
     }
   };
-  componentDidMount(){
+  componentDidMount() {
     this.getDetailed()
   };
   // 获取子组件实例
@@ -76,12 +76,12 @@ class DepartmentAdd extends Component{
   }
   // 获取部门详情
   getDetailed = () => {
-    if(!this.props.location.state){return false}
-    departmentDetailed({id:this.state.id}).then(res => {
+    if (!this.props.location.state) { return false }
+    departmentDetailed({ id: this.state.id }).then(res => {
       this.setState({
         formConfig: {
-            ...this.state.formConfig,
-            setFieldValue: res.data.data
+          ...this.state.formConfig,
+          setFieldValue: res.data.data
         }
       })
       // 赋值表单
@@ -94,38 +94,38 @@ class DepartmentAdd extends Component{
     editData.id = this.state.id
     editDepartment(editData).then(res => {
       message.success(res.data.message);
-      this.setState({loading:false});
+      this.setState({ loading: false });
       this.getDetailed(editData.id);
     }).catch(error => {
-      this.setState({loading:false})
+      this.setState({ loading: false })
     })
   }
   /** 添加信息 */
   onHandlerAdd = (value) => {
     let addData = value;
     DepartmentAddApi(addData).then(res => {
-        const data = res.data;
-        message.success(data.message);
-        this.setState({ loading: false });
-        // 调用FormComponent组件方法清除表单
-        this.FormComponent.clearableForm();
+      const data = res.data;
+      message.success(data.message);
+      this.setState({ loading: false });
+      // 调用FormComponent组件方法清除表单
+      this.FormComponent.clearableForm();
     }).catch(error => {
-        this.setState({ loading: false })
+      this.setState({ loading: false })
     })
-}
-/** 提交表单 */
-onHandlerSubmit = (value) => {
+  }
+  /** 提交表单 */
+  onHandlerSubmit = (value) => {
     this.state.id ? this.onHandlerEdit(value) : this.onHandlerAdd(value);
-}
-  render(){
+  }
+  render() {
     const { formItem, formLayout, formConfig, id } = this.state;
-    return(
+    return (
       <Fragment>
         <FormComponent
-          onRef={this.getChildRef} 
-          formItem={ formItem } 
-          formLayout={formLayout} 
-          formConfig={formConfig} 
+          onRef={this.getChildRef}
+          formItem={formItem}
+          formLayout={formLayout}
+          formConfig={formConfig}
           submit={this.onHandlerSubmit}
           btnText={id}
         />

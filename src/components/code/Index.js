@@ -1,4 +1,4 @@
-import React,{ Component } from "react";
+import React, { Component } from "react";
 // antd
 import { Button, message } from 'antd';
 // 验证
@@ -7,9 +7,9 @@ import { validata_email } from '@utils/validata';
 import { GetCode } from "@api/account";
 // 定时器
 let timer = null;
-//class
-class Code extends Component{
-    constructor(props){
+/** 获取验证码组件 */
+class Code extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             username: props.username,
@@ -17,17 +17,17 @@ class Code extends Component{
             btn_loading: false,
             btn_disabled: false,
             module: props.module
-        };    
+        };
     };
     //监听接收父组件的传值
-    UNSAFE_componentWillReceiveProps({ username }){
+    UNSAFE_componentWillReceiveProps({ username }) {
         // console.log(username)
         this.setState({
             username
         })
     }
     // 组件销毁
-    componentWillUnmount(){
+    componentWillUnmount() {
         clearInterval(timer);
     }
     /** 获取验证码 */
@@ -36,65 +36,65 @@ class Code extends Component{
         // console.log(process.env.REACT_APP_BASE_URL)
         // console.log("获取验证码",this.state.username)
         const username = this.state.username;
-        if(!username){
-            message.warning("用户名不能为空！",2);
+        if (!username) {
+            message.warning("用户名不能为空！", 2);
             return false;
         }
-        if(!validata_email(username)){
-            message.warning("邮箱格式有误！",2);
+        if (!validata_email(username)) {
+            message.warning("邮箱格式有误！", 2);
             return false;
         }
         this.setState({
-            btn_loading:true,
-            btn_text:"发送中"
+            btn_loading: true,
+            btn_text: "发送中"
         })
         const requestData = {
             username,
-            module:this.state.module
+            module: this.state.module
         }
-        GetCode(requestData).then(res =>{
+        GetCode(requestData).then(res => {
             message.success(res.data.message);
             // console.log(res);
             this.countDown();
         }).catch(error => {
             this.setState({
-                btn_loading:false,
-                btn_text:"重新获取"
+                btn_loading: false,
+                btn_text: "重新获取"
             })
         })
     };
-    /** 倒计时 */ 
+    /** 倒计时 */
     countDown = () => {
         let sec = 30;
         this.setState({
-            btn_loading:false,
-            btn_disabled:true,
-            btn_text:`${sec}s`
+            btn_loading: false,
+            btn_disabled: true,
+            btn_text: `${sec}s`
         });
         timer = setInterval(() => {
             sec--;
-            if(sec<=0){
+            if (sec <= 0) {
                 this.setState({
-                    btn_disabled:false,
-                    btn_text:"重新获取"
+                    btn_disabled: false,
+                    btn_text: "重新获取"
                 });
                 clearInterval(timer);
                 return false;
             }
             this.setState({
-                btn_text:`${sec}s`
+                btn_text: `${sec}s`
             });
-        },1000)
+        }, 1000)
     };
 
-    render(){
+    render() {
         return (
-            <Button 
-            type="danger"
-            block
-            disabled={this.state.btn_disabled}
-            loading={this.state.btn_loading}
-            onClick={this.getCode}
+            <Button
+                type="danger"
+                block
+                disabled={this.state.btn_disabled}
+                loading={this.state.btn_loading}
+                onClick={this.getCode}
             >{this.state.btn_text}</Button>
         )
     }

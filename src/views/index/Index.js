@@ -1,4 +1,4 @@
-import React,{ Component } from "react";
+import React, { Component } from "react";
 import "./layout.scss"
 // 组件
 import LayoutAside from "./components/Aside";
@@ -6,26 +6,26 @@ import LayoutHeader from "./components/Header";
 import ContainerMain from "@c/containerMain/Index";
 // antd
 import { Layout } from 'antd';
-const { Sider, Header, Content} = Layout;
+const { Sider, Header, Content } = Layout;
 
 class Index extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             collapsed: false,
         };
     }
-    componentDidMount(){
+    componentDidMount() {
         const collapsed = JSON.parse(sessionStorage.getItem('collapsed'))
-        this.setState({collapsed})
+        this.setState({ collapsed })
     }
     toggleCollapsed = () => {
         const collapsed = !this.state.collapsed
-        this.setState({collapsed})
-        sessionStorage.setItem('collapsed',collapsed)
+        this.setState({ collapsed })
+        sessionStorage.setItem('collapsed', collapsed)
     }
-    render(){
-        const {collapsed} = this.state;
+    render() {
+        const { collapsed } = this.state;
         return (
             <Layout className="layout-wrap">
                 <Header className="layout-header">
@@ -41,7 +41,7 @@ class Index extends Component {
                 </Layout>
             </Layout>
         )
-    } 
+    }
 }
 
 export default Index;

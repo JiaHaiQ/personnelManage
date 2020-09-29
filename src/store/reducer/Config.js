@@ -2,13 +2,13 @@ import { configAddStatus } from "../Type";
 // 全局参数
 const config = {
     status: [
-        { label: "启用", value: true},
-        { label: "禁用", value: false},
+        { label: "启用", value: true },
+        { label: "禁用", value: false },
     ],
 }
 // 默认配置 Reducer
-const configReducer = function(state = config, action){
-    switch(action.type){
+const configReducer = function (state = config, action) {
+    switch (action.type) {
         case configAddStatus: {
             return {
                 ...state,
