@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { addDepartmentListAction, updataDepartmentListAction } from '@/store/action/Department';
+import { addDepartmentListAction, updateDepartmentListAction } from '@/store/action/Department';
 // api
 import { TableList } from "@api/common";
 // url
@@ -178,7 +178,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         searchListdata: bindActionCreators({
             addData: addDepartmentListAction,
-            upData: updataDepartmentListAction
+            upData: updateDepartmentListAction
         }, dispatch)
     }
 }
