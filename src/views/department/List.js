@@ -106,8 +106,6 @@ class DepartmentList extends Component {
   /** 删除 */
   delete = (id) => {
     this.tableComponent.onHandlerDelete(id)
-
-    
   }
 
   render() {
