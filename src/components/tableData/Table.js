@@ -1,24 +1,26 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 // antd
-import { Table } from 'antd';
+import { Table, Pagination, Row, Col, Button } from 'antd';
 /* Table UI组件 */
 class TableBasis extends Component {
     render() {
-        const { thead } = this.props.config;
+        const { columns, dataSource, total, changePageCurrent, changePageSize, batchButton, handlerDelete, rowSelection, rowkey, loading } = this.props;
         return (
             <Fragment>
-                <div className="spacing-30"></div>
                 <Table
                     bordered
-                    rowKey={this.props.rowKey}
-                    columns={thead}
-                    dataSource={this.props.list}
+                    loading={loading}
+                    pagination={false}
+                    rowKey={rowkey}
+                    columns={columns}
+                    dataSource={dataSource}
+                    rowSelection={rowSelection}
                 />
-                {/* <Row>
+                <div className="spacing-30"></div>
+                <Row>
                     <Col span={8}>
-                        { batchButton && <Button type="danger" onClick={handlerDelete}>批量删除</Button> }
+                        {batchButton && <Button type="danger" onClick={handlerDelete}>批量删除</Button>}
                     </Col>
                     <Col span={16}>
                         <Pagination
@@ -31,27 +33,31 @@ class TableBasis extends Component {
                             showTotal={total => `共 ${total} 条`}
                         />
                     </Col>
-                </Row> */}
+                </Row>
             </Fragment>
         )
     }
 }
 // 校验数据类型
 TableBasis.propTypes = {
-    config: PropTypes.object,
-    rowKey: PropTypes.string,
+    loading: PropTypes.bool,
+    columns: PropTypes.array,
+    dataSource: PropTypes.array,
+    total: PropTypes.number,
+    changePageCurrent: PropTypes.func,
+    changePageSize: PropTypes.func,
+    batchButton: PropTypes.bool,
+    handlerDelete: PropTypes.func,
+    rowSelection: PropTypes.object,
+    rowkey: PropTypes.string,
 }
 // 默认值
 TableBasis.defaultProps = {
-    config: {},
-    rowKey: "id"
+    loading: false,
+    columns: [],
+    dataSource: [],
+    total: 0,
+    batchButton: false,
+    rowkey: "id",
 }
-const mapStateToProps = (state) => {
-    return {
-        list: state.department.departmentList
-    }
-}
-export default connect(
-    mapStateToProps,
-    null
-)(TableBasis);
+export default TableBasis;

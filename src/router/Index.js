@@ -25,6 +25,16 @@ const router = [
             { key: '/index/department/list', title: '部门列表', icon: '' },
             { key: '/index/department/add', title: '添加部门', icon: '', }
         ]
+    }
+    ,
+    {
+        title: '职位管理',
+        icon: 'job',
+        key: '/index/job',
+        child: [
+            { key: '/index/job/list', title: '职位列表', icon: '' },
+            { key: '/index/job/add', title: '添加职位', icon: '', }
+        ]
     },
     {
         title: '加班',

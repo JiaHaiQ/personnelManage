@@ -5,7 +5,8 @@ import { Button, Switch, message } from 'antd';
 // api
 import { departmentStatus } from "@api/department";
 // 组件
-import TableComponent from '@c/tableData/Index';
+import TableComponent from '@c/tableData/Table';
+import FormSearch from '@c/formSearch/Index';
 class DepartmentList extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +18,23 @@ class DepartmentList extends Component {
       // 表格加载
       loadingTable: false,
       id: "",
+      // form配置
+      formItem: [
+        {
+          type: "Input",
+          label: "部门名称",
+          name: "name",
+          placeholder: "请输入部门名称"
+        },
+        {
+          type: "Select",
+          label: "部门名称",
+          name: "status",
+          placeholder: "请选择",
+          style: { width: "120px" },
+          optionsKey: "status"
+        }
+      ],
       // table配置
       tableConfig: {
         url: "departmentList",
@@ -56,24 +74,7 @@ class DepartmentList extends Component {
               )
             }
           }
-        ],
-        // form配置
-        formItem: [
-          {
-            type: "Input",
-            label: "部门名称",
-            name: "name",
-            placeholder: "请输入部门名称"
-          },
-          // {
-          //   type: "Select",
-          //   label: "部门名称",
-          //   name: "status",
-          //   placeholder: "请选择",
-          //   style: { width: "120px" },
-          //   optionsKey: "status"
-          // }
-        ],
+        ]
       },
       // 表数据
       data: []
@@ -110,7 +111,8 @@ class DepartmentList extends Component {
   render() {
     return (
       <Fragment>
-        <TableComponent onRef={this.getChildRef} batchButton={true} config={this.state.tableConfig} />
+        <FormSearch formItem={this.state.formItem} />
+        <TableComponent config={this.state.tableConfig} />
       </Fragment>
     )
   }

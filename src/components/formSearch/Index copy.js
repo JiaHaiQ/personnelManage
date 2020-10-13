@@ -1,19 +1,17 @@
 import React, { Component, Fragment } from 'react';
-// propTypes
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addDepartmentListAction, updateDepartmentListAction } from '@/store/action/Department';
 // api
-import { requestData } from "@api/common";
+import { TableList } from "@api/common";
 // url
 import requestUrl from "@api/requestUrl";
-// 数据
-import Store from '@/store/Index';
-//Component
-import SelectComponent from "@c/select/Index";
 // antd
-import { Input, Form, Select, Radio, InputNumber, Button, message } from 'antd';
+import { Input, Form, Select, Radio, InputNumber, Button } from 'antd';
 const { Option } = Select;
-/** Form组件 */
-class FormComponent extends Component {
+/** FormSearch组件 */
+class FormSearch extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,8 +28,7 @@ class FormComponent extends Component {
         this.refs.form.setFieldsValue(formConfig.setFieldValue)
     }
     componentDidMount() {
-        // 返回子组件实例
-        this.props.onRef(this);
+        this.onSubmit()
     }
     // 验证规则
     rules = (item) => {
@@ -79,15 +76,6 @@ class FormComponent extends Component {
             </Form.Item>
         )
     }
-    // SelectComponent
-    SelectComponentElem = (item) => {
-        const rules = this.rules(item);
-        return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <SelectComponent url={item.url} propsKey={item.propsKey} />
-            </Form.Item>
-        )
-    }
     // radio
     radioElem = (item) => {
         const rules = this.rules(item);
@@ -105,54 +93,60 @@ class FormComponent extends Component {
     }
     // 初始化
     initFormItem = () => {
-        const { formItem } = this.props;
+        const { formItem, config } = this.props;
         if (!formItem || (formItem && formItem.length === 0)) { return false };
         const formList = [];
         formItem.forEach(item => {
             if (item.type === "Input") { formList.push(this.inputElem(item)) }
             if (item.type === "InputNumber") { formList.push(this.inputNumberElem(item)) }
             if (item.type === "Select") {
-                if (item.optionsKey) {
-                    item.options = Store.getState().config[item.optionsKey];
-                }
+                item.options = config[item.optionsKey];
                 formList.push(this.selectElem(item))
-            }
-            if (item.type === "SelectComponent") {
-                formList.push(this.SelectComponentElem(item))
             }
             if (item.type === "Radio") { formList.push(this.radioElem(item)) }
         })
         return formList;
     }
-    // 重置form
-    clearableForm = () => {
-        this.refs.form.resetFields();
+    search = (params) => {
+        const requestData = {
+            url: requestUrl[params.url],
+            data: {
+                pageNumber: 1,
+                pageSize: 10,
+            }
+        }
+        // 筛选数据过滤
+        if (JSON.stringify(params.searchData) !== "{}") {
+            for (let key in params.searchData) {
+                requestData.data[key] = params.searchData[key]
+            }
+        }
+        TableList(requestData).then(res => {
+            const listData = res.data.data;
+            // store-actions
+            this.props.searchListdata.addData(listData)
+        }).catch(error => {
+
+        })
     }
     // 提交
     onSubmit = (value) => {
-        // 传入的 submit
-        if (this.props.submit) {
-            this.props.submit(value);
-            return false;
+        let searchData = {};
+        for (let key in value) {
+            if (value[key] !== undefined && value[key] !== "") {
+                searchData[key] = value[key]
+            }
         }
-        const data = {
-            url: requestUrl[this.props.formConfig.url],
-            data: value
-        }
-        this.setState({ loading: true })
-        requestData(data).then(res => {
-            message.success(res.data.message)
-            this.clearableForm();
-            this.setState({ loading: false })
-        }).catch(error => {
-            this.setState({ loading: false })
+        this.search({
+            url: "departmentList",
+            searchData
         })
     }
     render() {
-        const { formConfig, formLayout, btnText } = this.props;
+        const { formConfig, formLayout } = this.props;
         return (
             <Fragment>
-                <Form ref="form" initialValues={formConfig.initValue} {...formLayout} onFinish={this.onSubmit} >
+                <Form layout="inline" ref="form" initialValues={formConfig.initValue} {...formLayout} onFinish={this.onSubmit} >
                     {this.initFormItem()}
                     <Form.Item>
                         <Button
@@ -160,8 +154,8 @@ class FormComponent extends Component {
                             loading={this.state.loading}
                             htmlType="submit"
                         >
-                            {btnText === "" ? "添加" : "修改"}
-                        </Button>
+                            搜索
+                    </Button>
                     </Form.Item>
                 </Form>
             </Fragment>
@@ -170,11 +164,25 @@ class FormComponent extends Component {
 }
 
 // 校验数据类型
-FormComponent.propTypes = {
+FormSearch.propTypes = {
     formConfig: PropTypes.object
 }
 // 默认值
-FormComponent.defaultProps = {
+FormSearch.defaultProps = {
     formConfig: {}
 }
-export default FormComponent;
+const mapStateToProps = (state) => ({
+    config: state.config
+})
+const mapDispatchToProps = (dispatch) => {
+    return {
+        searchListdata: bindActionCreators({
+            addData: addDepartmentListAction,
+            upData: updateDepartmentListAction
+        }, dispatch)
+    }
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(FormSearch);

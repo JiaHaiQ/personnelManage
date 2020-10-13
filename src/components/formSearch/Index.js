@@ -1,12 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { addDepartmentListAction, updateDepartmentListAction } from '@/store/action/Department';
-// api
-import { TableList } from "@api/common";
-// url
-import requestUrl from "@api/requestUrl";
+// 数据
+import Store from '@/store/Index';
 // antd
 import { Input, Form, Select, Radio, InputNumber, Button } from 'antd';
 const { Option } = Select;
@@ -93,54 +88,31 @@ class FormSearch extends Component {
     }
     // 初始化
     initFormItem = () => {
-        const { formItem, config } = this.props;
+        const { formItem } = this.props;
         if (!formItem || (formItem && formItem.length === 0)) { return false };
         const formList = [];
         formItem.forEach(item => {
             if (item.type === "Input") { formList.push(this.inputElem(item)) }
             if (item.type === "InputNumber") { formList.push(this.inputNumberElem(item)) }
             if (item.type === "Select") {
-                item.options = config[item.optionsKey];
+                if (item.optionsKey) {
+                    item.options = Store.getState().config[item.optionsKey];
+                }
                 formList.push(this.selectElem(item))
             }
             if (item.type === "Radio") { formList.push(this.radioElem(item)) }
         })
         return formList;
     }
-    search = (params) => {
-        const requestData = {
-            url: requestUrl[params.url],
-            data: {
-                pageNumber: 1,
-                pageSize: 10,
-            }
-        }
-        // 筛选数据过滤
-        if (JSON.stringify(params.searchData) !== "{}") {
-            for (let key in params.searchData) {
-                requestData.data[key] = params.searchData[key]
-            }
-        }
-        TableList(requestData).then(res => {
-            const listData = res.data.data;
-            // store-actions
-            this.props.searchListdata.addData(listData)
-        }).catch(error => {
-
-        })
-    }
     // 提交
     onSubmit = (value) => {
-        let searchData = {};
+        const searchData = {};
         for (let key in value) {
             if (value[key] !== undefined && value[key] !== "") {
                 searchData[key] = value[key]
             }
         }
-        this.search({
-            url: "departmentList",
-            searchData
-        })
+        this.props.search(searchData)
     }
     render() {
         const { formConfig, formLayout } = this.props;
@@ -171,18 +143,4 @@ FormSearch.propTypes = {
 FormSearch.defaultProps = {
     formConfig: {}
 }
-const mapStateToProps = (state) => ({
-    config: state.config
-})
-const mapDispatchToProps = (dispatch) => {
-    return {
-        searchListdata: bindActionCreators({
-            addData: addDepartmentListAction,
-            upData: updateDepartmentListAction
-        }, dispatch)
-    }
-}
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(FormSearch);
+export default FormSearch;

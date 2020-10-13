@@ -19,9 +19,10 @@ class DepartmentList extends Component {
       id: "",
       // table配置
       tableConfig: {
-        url: "departmentList",
+        url: "jobList",
         checkbox: true,
         thead: [
+          { title: "职位名称", dataIndex: "jobName", key: "jobName" },
           { title: "部门名称", dataIndex: "name", key: "name" },
           {
             title: "禁启用",
@@ -33,13 +34,12 @@ class DepartmentList extends Component {
                   loading={rowData.id === this.state.id}
                   checkedChildren="启用"
                   unCheckedChildren="禁用"
-                  defaultChecked={status === "1" ? true : false}
+                  defaultChecked={status}
                   onChange={() => this.onHandlerSwitch(rowData)}
                 />
               )
             }
           },
-          { title: "人员数量", dataIndex: "number", key: "number" },
           {
             title: "操作",
             dataIndex: "open",
@@ -64,15 +64,7 @@ class DepartmentList extends Component {
             label: "部门名称",
             name: "name",
             placeholder: "请输入部门名称"
-          },
-          // {
-          //   type: "Select",
-          //   label: "部门名称",
-          //   name: "status",
-          //   placeholder: "请选择",
-          //   style: { width: "120px" },
-          //   optionsKey: "status"
-          // }
+          }
         ],
       },
       // 表数据

@@ -145,6 +145,7 @@ class TableComponent extends Component {
                         columns={thead}
                         dataSource={data}
                         total={total}
+                        batchButton={this.props.batchButton}
                         changePageCurrent={this.onCurrentPage}
                         changePageSize={this.onSizePage}
                         handlerDelete={() => this.onHandlerDelete()}
