@@ -14,32 +14,46 @@ class SelectComponent extends Component {
         super();
         this.state = {
             props: props.propsKey,
-            options: []
+            options: [],
+            value: "",
+            name: props.name
         };
     };
     componentDidMount() {
         this.getSelectList();
     }
+    /** 获取下拉数据 */
     getSelectList = () => {
         const url = requestUrl[this.props.url];
         const data = {
             url,
             data: {}
         }
+        if (!data.url) { return false }
         requestData(data).then(res => {
             this.setState({
                 options: res.data.data.data
             })
         })
     }
+    triggerChange = (changedValue) => {
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange({ [this.state.name]: changedValue });
+        }
+    }
+    onChange = (value) => {
+        this.setState({ value })
+        this.triggerChange(value);
+    }
     render() {
-        const { options } = this.state;
-        const { value, label } = this.state.props
+        const { value, label } = this.state.props;
+        const { style, placeholder } = this.props;
         return (
             <Fragment>
-                <Select>
+                <Select value={this.state.value} onChange={this.onChange} style={style} placeholder={placeholder}>
                     {
-                        options && options.map(elem => {
+                        this.state.options && this.state.options.map(elem => {
                             return <Option value={elem[value]} key={elem[value]}>{elem[label]}</Option>
                         })
                     }

@@ -17,7 +17,9 @@ class DepartmentAdd extends Component {
           number: 1,
           status: true
         },
-        setFieldValue: {}
+        setFieldValue: {},
+        //格式化select数据
+        formatFormKey: "parentId"
       },
       formLayout: {
         labelCol: { span: 2 },
@@ -34,6 +36,8 @@ class DepartmentAdd extends Component {
           label: "部门名称",
           name: "parentId",
           required: true,
+          style: { width: "300px" },
+          placeholder: "请选择部门"
         },
         {
           type: "Input",

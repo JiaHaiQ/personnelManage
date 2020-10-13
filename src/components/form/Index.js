@@ -46,6 +46,13 @@ class FormComponent extends Component {
         }
         return rules;
     }
+    /** 检验select组件 */
+    validatorSelect = (rule, value) => {
+        if (!value || !value[rule.field]) {
+            return Promise.reject('选项不能为空！');
+        }
+        return Promise.resolve();
+    }
     // input
     inputElem = (item) => {
         const rules = this.rules(item);
@@ -83,8 +90,19 @@ class FormComponent extends Component {
     SelectComponentElem = (item) => {
         const rules = this.rules(item);
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <SelectComponent url={item.url} propsKey={item.propsKey} />
+            <Form.Item
+                label={item.label}
+                name={item.name}
+                key={item.name}
+                rules={[...rules, { validator: this.validatorSelect }]}
+            >
+                <SelectComponent
+                    url={item.url}
+                    propsKey={item.propsKey}
+                    name={item.name}
+                    style={item.style}
+                    placeholder={item.placeholder}
+                />
             </Form.Item>
         )
     }
@@ -124,16 +142,24 @@ class FormComponent extends Component {
         })
         return formList;
     }
-    // 重置form
+    /** 重置form */
     clearableForm = () => {
         this.refs.form.resetFields();
     }
-    // 提交
+    /** 提交 */
     onSubmit = (value) => {
         // 传入的 submit
         if (this.props.submit) {
             this.props.submit(value);
             return false;
+        }
+        const { formatFormKey } = this.props.formConfig
+        if (formatFormKey && value[formatFormKey]) {
+            const dataKey = value[formatFormKey]
+            // 删除指定key
+            delete value.dataKey
+            // 浅拷贝合并JSON对象
+            value = Object.assign(value, dataKey)
         }
         const data = {
             url: requestUrl[this.props.formConfig.url],
