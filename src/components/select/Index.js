@@ -30,6 +30,7 @@ class SelectComponent extends Component {
             data: {}
         }
         if (!data.url) { return false }
+        // 接口
         requestData(data).then(res => {
             this.setState({
                 options: res.data.data.data
