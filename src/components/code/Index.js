@@ -20,11 +20,15 @@ class Code extends Component {
         };
     };
     //监听接收父组件的传值
-    UNSAFE_componentWillReceiveProps({ username }) {
-        // console.log(username)
-        this.setState({
-            username
-        })
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let { username } = nextProps
+        if (!username) { return false }
+        if (username !== prevState.username) {
+            return {
+                username
+            }
+        }
+        return null
     }
     // 组件销毁
     componentWillUnmount() {

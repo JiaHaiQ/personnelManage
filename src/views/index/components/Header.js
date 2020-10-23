@@ -8,11 +8,15 @@ class layoutHeader extends Component {
             collapsed: props.collapsed,
         };
     }
-    //监听接收父组件props值变化
-    UNSAFE_componentWillReceiveProps({ collapsed }) {
-        this.setState({
-            collapsed
-        })
+    //监听接收父组件的传值
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let { collapsed } = nextProps
+        if (collapsed !== prevState.collapsed) {
+            return {
+                collapsed
+            }
+        }
+        return false
     }
     toggleMenu = () => {
         this.props.toggle()
