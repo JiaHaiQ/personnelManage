@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // antd
 import { Button, Switch, message } from 'antd';
 // api
-import { departmentStatus } from "@api/department";
+import { jobStatus } from "@api/job";
 // 组件
 import TableComponent from '@c/tableData/Index';
 class DepartmentList extends Component {
@@ -31,7 +31,7 @@ class DepartmentList extends Component {
             render: (status, rowData) => {
               return (
                 <Switch
-                  loading={rowData.id === this.state.id}
+                  loading={rowData.jobId === this.state.id}
                   checkedChildren="启用"
                   unCheckedChildren="禁用"
                   defaultChecked={status}
@@ -49,9 +49,9 @@ class DepartmentList extends Component {
               return (
                 <div className="inline-button">
                   <Button type="primary">
-                    <Link to={{ pathname: "/index/department/add", state: { id: rowData.id } }}>编辑</Link>
+                    <Link to={{ pathname: "/index/job/add", state: { id: rowData.jobId } }}>编辑</Link>
                   </Button>
-                  <Button type="danger" onClick={() => this.delete(rowData.id)}>删除</Button>
+                  <Button type="danger" onClick={() => this.delete(rowData.jobId)}>删除</Button>
                 </div>
               )
             }
@@ -81,13 +81,12 @@ class DepartmentList extends Component {
   }
   // 禁启用
   onHandlerSwitch(data) {
-    if (!data) { return false }
     let statusData = {
-      id: data.id,
-      status: data.status === "1" ? false : true
+      id: data.jobId,
+      status: !data.status
     }
-    this.setState({ id: data.id })
-    departmentStatus(statusData).then(res => {
+    this.setState({ id: data.jobId })
+    jobStatus(statusData).then(res => {
       message.success(res.data.message);
       this.setState({ id: "" })
     }).catch(error => {

@@ -22,6 +22,20 @@ class SelectComponent extends Component {
     componentDidMount() {
         this.getSelectList();
     }
+    // 监听props
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let { value, name } = nextProps
+        if (!value) { return false }
+        if (Object.prototype.toString.call(value) === "[object Object]") {
+            value = value[name]
+        }
+        if (value !== prevState.value) {
+            return {
+                value
+            }
+        }
+        return null
+    }
     /** 获取下拉数据 */
     getSelectList = () => {
         const url = requestUrl[this.props.url];

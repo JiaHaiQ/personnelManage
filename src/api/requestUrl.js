@@ -10,7 +10,9 @@ const requestUrl = {
     /** 职位 */
     // Table Api
     "jobList": "/job/list/",
+    "jobListDelete": "/job/delete/",
     // Form Api
     "jobAdd": "/job/add/",
+    "jobEdit": "/job/edit/",
 }
 export default requestUrl;

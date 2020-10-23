@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 // antd
-import { message } from 'antd';
+// import { message } from 'antd';
 // api
-import { DepartmentAddApi, departmentDetailed, editDepartment } from "@api/department";
+import { jobDetailed } from "@api/job";
 // form组件
 import FormComponent from '@c/form/Index';
 class DepartmentAdd extends Component {
@@ -13,6 +13,7 @@ class DepartmentAdd extends Component {
       id: "",
       formConfig: {
         url: "jobAdd",
+        editKey: "",
         initValue: {
           number: 1,
           status: true
@@ -73,65 +74,36 @@ class DepartmentAdd extends Component {
     }
   };
   componentDidMount() {
-    this.getDetailed()
+    this.state.id && this.getDetailed()
   };
-  // 获取子组件实例
-  getChildRef = (ref) => {
-    this.FormComponent = ref; // 存储子组件
-  }
-  // 获取部门详情
+  // 获取职位详情
   getDetailed = () => {
     if (!this.props.location.state) { return false }
-    departmentDetailed({ id: this.state.id }).then(res => {
+    jobDetailed({ id: this.state.id }).then(res => {
       this.setState({
         formConfig: {
           ...this.state.formConfig,
-          setFieldValue: res.data.data
+          setFieldValue: res.data.data,
+          url: "jobEdit",
+          editKey: "jobId"
         }
       })
-      // 赋值表单
-      // this.refs.form.setFieldsValue(res.data.data)
-    })
-  }
-  /** 编辑信息 */
-  onHandlerEdit = (value) => {
-    let editData = value;
-    editData.id = this.state.id
-    editDepartment(editData).then(res => {
-      message.success(res.data.message);
-      this.setState({ loading: false });
-      this.getDetailed(editData.id);
-    }).catch(error => {
-      this.setState({ loading: false })
-    })
-  }
-  /** 添加信息 */
-  onHandlerAdd = (value) => {
-    let addData = value;
-    DepartmentAddApi(addData).then(res => {
-      const data = res.data;
-      message.success(data.message);
-      this.setState({ loading: false });
-      // 调用FormComponent组件方法清除表单
-      this.FormComponent.clearableForm();
-    }).catch(error => {
-      this.setState({ loading: false })
     })
   }
   /** 提交表单 */
   onHandlerSubmit = (value) => {
-    this.state.id ? this.onHandlerEdit(value) : this.onHandlerAdd(value);
+    console.log(this.state.id);
+    // this.state.id ? this.onHandlerEdit(value) : this.onHandlerAdd(value);
   }
   render() {
     const { formItem, formLayout, formConfig, id } = this.state;
     return (
       <Fragment>
         <FormComponent
-          onRef={this.getChildRef}
           formItem={formItem}
           formLayout={formLayout}
           formConfig={formConfig}
-          // submit={this.onHandlerSubmit}
+          getDetailed = {this.getDetailed}
           btnText={id}
         />
         {/* <FormComponent

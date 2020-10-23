@@ -68,7 +68,7 @@ class DepartmentAdd extends Component {
     }
   };
   componentDidMount() {
-    this.getDetailed()
+    this.state.id && this.getDetailed()
   };
   // 获取子组件实例
   getChildRef = (ref) => {

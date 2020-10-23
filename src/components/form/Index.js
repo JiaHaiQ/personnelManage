@@ -20,24 +20,29 @@ class FormComponent extends Component {
             loading: false,
             mesPreix: {
                 "Input": "请输入",
+                "InputNumber": "请输入",
                 "Select": "请选择",
+                "SelectComponent": "请选择",
                 "Radio": "请选择",
             }
         };
     };
+    // 监听props
     UNSAFE_componentWillReceiveProps({ formConfig }) {
         // 赋值表单
         this.refs.form.setFieldsValue(formConfig.setFieldValue)
     }
     componentDidMount() {
         // 返回子组件实例
-        this.props.onRef(this);
+        if (this.props.onRef) {
+            this.props.onRef(this);
+        }
     }
     // 验证规则
     rules = (item) => {
         const { mesPreix } = this.state;
         let rules = [];
-        let message = item.message || `${mesPreix[item.type]}${item.label}`;
+        let message = item.message || `${mesPreix[item.type]}${item.label}！`;
         if (item.required) {
             rules.push({ required: true, message })
         }
@@ -48,10 +53,10 @@ class FormComponent extends Component {
     }
     /** 检验select组件 */
     validatorSelect = (rule, value) => {
-        if (!value || !value[rule.field]) {
-            return Promise.reject('选项不能为空！');
+        if (value || value[rule.field]) {
+            return Promise.resolve();
         }
-        return Promise.resolve();
+        return Promise.reject('选项不能为空！');
     }
     // input
     inputElem = (item) => {
@@ -146,6 +151,21 @@ class FormComponent extends Component {
     clearableForm = () => {
         this.refs.form.resetFields();
     }
+    /** 参数为JSON对象时处理 */
+    formatData = (value) => {
+        const data = JSON.parse(JSON.stringify(value));
+        const { formatFormKey, editKey, setFieldValue } = this.props.formConfig
+        const keyValue = data[formatFormKey]
+        // 如果是JSON对象
+        if (Object.prototype.toString.call(keyValue) === "[object Object]") {
+            data[formatFormKey] = keyValue[formatFormKey]
+        }
+        // 是否存在编辑key
+        if (editKey) {
+            data[editKey] = setFieldValue[editKey]
+        }
+        return data
+    }
     /** 提交 */
     onSubmit = (value) => {
         // 传入的 submit
@@ -153,22 +173,22 @@ class FormComponent extends Component {
             this.props.submit(value);
             return false;
         }
-        const { formatFormKey } = this.props.formConfig
-        if (formatFormKey && value[formatFormKey]) {
-            const dataKey = value[formatFormKey]
-            // 删除指定key
-            delete value.dataKey
-            // 浅拷贝合并JSON对象
-            value = Object.assign(value, dataKey)
-        }
+        const request = this.formatData(value)
         const data = {
             url: requestUrl[this.props.formConfig.url],
-            data: value
+            data: request
         }
         this.setState({ loading: true })
         requestData(data).then(res => {
             message.success(res.data.message)
-            this.clearableForm();
+            // 如果不是修改，清空form
+            let edit = this.props.formConfig.editKey
+            if( !edit || edit === ""){
+                this.clearableForm();
+            }else{
+                // 修改之后调用父组件获取详情
+                this.props.getDetailed()
+            }
             this.setState({ loading: false })
         }).catch(error => {
             this.setState({ loading: false })
@@ -204,3 +224,75 @@ FormComponent.defaultProps = {
     formConfig: {}
 }
 export default FormComponent;
+
+/**
+ * import FormComponent from '@c/form/Index';
+ * <FormComponent
+        onRef={this.getChildRef}
+        formItem={formItem}
+        formLayout={formLayout}
+        formConfig={formConfig}
+        submit={this.onHandlerSubmit}
+        btnText={id}
+    />
+ *
+ *    this.state = {
+      formConfig: {
+        url: "jobAdd", // url
+        editKey: "jobId", // 编辑需要的key
+        initValue: {
+          number: 1,
+          status: true
+        }, // 默认值
+        setFieldValue: {}, form数据
+        //格式化select数据
+        formatFormKey: "parentId"
+      },
+      formLayout: {
+        labelCol: { span: 2 },
+        wrapperCol: { span: 20 }
+      },
+      formItem: [
+        {
+          type: "SelectComponent",
+          url: "getDepartmentList",
+          propsKey: {
+            value: "id",
+            label: "name"
+          },
+          label: "部门名称",
+          name: "parentId",
+          required: true,
+          style: { width: "300px" },
+          placeholder: "请选择部门"
+        },
+        {
+          type: "Input",
+          label: "职位名称",
+          name: "jobName",
+          required: true,
+          style: { width: "200px" },
+          placeholder: "请输入职位名称"
+        },
+        {
+          type: "Radio",
+          label: "禁启用",
+          name: "status",
+          required: true,
+          options: [
+            { label: "启用", value: true },
+            { label: "禁用", value: false },
+          ],
+        },
+        {
+          type: "Input",
+          label: "描述",
+          name: "content",
+          required: true,
+          placeholder: "请输入描述内容"
+        },
+      ]
+    };
+  };
+ *
+ */
