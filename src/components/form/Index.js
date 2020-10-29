@@ -126,6 +126,20 @@ class FormComponent extends Component {
             </Form.Item>
         )
     }
+    // slot插槽
+    slotElem = (item) => {
+        const rules = this.rules(item);
+        return (
+            <Form.Item
+                label={item.label}
+                name={item.name}
+                key={item.name}
+                rules={rules}
+            >
+                {this.props.children && Array.isArray(this.props.children) ? this.props.children.filter(elem => elem.ref === item.slotName) : this.props.children}
+            </Form.Item>
+        )
+    }
     // 初始化
     initFormItem = () => {
         const { formItem } = this.props;
@@ -144,6 +158,7 @@ class FormComponent extends Component {
                 formList.push(this.SelectComponentElem(item))
             }
             if (item.type === "Radio") { formList.push(this.radioElem(item)) }
+            if (item.type === "slot") { formList.push(this.slotElem(item)) }
         })
         return formList;
     }
@@ -183,9 +198,9 @@ class FormComponent extends Component {
             message.success(res.data.message)
             // 如果不是修改，清空form
             let edit = this.props.formConfig.editKey
-            if( !edit || edit === ""){
+            if (!edit || edit === "") {
                 this.clearableForm();
-            }else{
+            } else {
                 // 修改之后调用父组件获取详情
                 this.props.getDetailed()
             }
